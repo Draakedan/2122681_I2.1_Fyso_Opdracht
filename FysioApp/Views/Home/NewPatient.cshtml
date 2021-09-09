@@ -4,7 +4,7 @@
 }
 
 <div class="container">
-    <form class="form-group" asp-action="Form" method="post">
+    <form class="form-group" asp-action="NewPatient" method="post">
         <div>
             <label asp-for="Name">Voer naam patient in:</label>
             <div><span asp-validation-for="Name" class="text-danger"></span></div>
@@ -17,7 +17,7 @@
         </div>
         <div>
             <label asp-for="Birthdate">Voer geboortedatum patient in:</label>
-            <div><span asp-validation-for="Birthdate" class="text-danger"></span>></div>
+            <div><span asp-validation-for="Birthdate" class="text-danger"></span></div>
             <input asp-for="Birthdate" class="form-control" type="date" />
         </div>
         <div>
@@ -25,5 +25,7 @@
             <div><span asp-validation-for="RegisterDate" class="text-danger"></span></div>
             <input asp-for="RegisterDate" class="form-control" type="date" />
         </div>
+
+        <button type="submit" class="btn btn-info">Toevoegen</button>
     </form>
     </div>

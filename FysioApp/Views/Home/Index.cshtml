@@ -12,9 +12,10 @@
                 <tr><th>naam</th><th>ID</th><th>geboorte</th><th>registratie</th></tr>
             </thead>
             <tbody>
-                @foreach (Patient p in Model)
+                @foreach (Patient patient in Model)
                 {
-                    <partial name="_TablePartial" model="p" />
+                    Console.WriteLine(patient.ToString() + "\n" + patient);
+                    <partial name="_TablePartial" model="patient" />
                 }
                 </tbody>
         </table>
