@@ -37,7 +37,6 @@ namespace FysioApp.Controllers
         private static void GeneratePatientList() 
         {
             Repository.AddPatient(new("Kira", "012345", new DateTime(1998, 12, 13), DateTime.Now));
-            Repository.AddPatient(new("Frank", "344660", new DateTime(1975, 5, 20), DateTime.Now));
         }
 
         [HttpGet]
