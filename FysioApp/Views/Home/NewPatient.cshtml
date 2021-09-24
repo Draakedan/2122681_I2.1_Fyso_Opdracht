@@ -1,6 +1,6 @@
 ﻿@model FysioApp.Models.Patient
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Add a Patient";
 }
 
 <div class="container">
@@ -24,6 +24,11 @@
             <label asp-for="RegisterDate">Voer datum van registratie in:</label>
             <div><span asp-validation-for="RegisterDate" class="text-danger"></span></div>
             <input asp-for="RegisterDate" class="form-control" type="date" />
+        </div>
+        <div>
+            <label asp-for="FireDate">Voer datum voor ontslag in:</label>
+            <div><span asp-validation-for="FireDate" class="text-danger"></span></div>
+            <input asp-for="FireDate" class="form-control" type="date" />
         </div>
 
         <button type="submit" class="btn btn-info">Toevoegen</button>
