@@ -5,25 +5,43 @@ using System.Threading.Tasks;
 
 namespace FysioApp.Models
 {
-    public class Repository
+    public class Repository : IRepository
     {
-        private static List<Patient> patients = new();
+        public List<Patient> Patients { get; init; }
 
-        public static IEnumerable<Patient> Patients => patients;
+        public Repository() => Patients = new List<Patient>();
 
-        public static void AddPatient(Patient patient) 
+        public void Add(Patient patient) 
         {
-            patients.Add(patient);
-            for (int i = 0; i < patients.Count; i++)
+            patient.Index = GetSize();
+            Patients.Add(patient);
+        }
+
+        public Patient Get(int id)
+        {
+            return Patients[id];
+        }
+
+        public int GetSize()
+        {
+            return Patients.Count;
+        }
+
+        public bool Exists(int id)
+        {
+            try
             {
-                //Console.WriteLine(patients[i]);
-                //Console.WriteLine(patients[i].ToString());
+                return Patients.Contains(Patients[id]);
+            }
+            catch 
+            {
+                return false;
             }
         }
 
-        public static int GetSize()
+        public List<Patient> GetAll() 
         {
-            return patients.Count;
+            return Patients;
         }
 
     }

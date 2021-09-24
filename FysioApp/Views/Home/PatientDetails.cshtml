@@ -1,0 +1,10 @@
+﻿@model FysioApp.Models.Patient
+@{
+    ViewData["Title"] = $"{Model.ID} info";
+}
+
+<h4>info van patient nr @Model.ID (@Model.Name)</h4>
+<p>Geboortedatum: @Model.Birthdate</p>
+<p>LeeftijdL @Model.Age</p>
+<p>Datum van registratie: @Model.RegisterDate</p>
+<p>Datum voor onstalg: @Model.FireDate</p>
