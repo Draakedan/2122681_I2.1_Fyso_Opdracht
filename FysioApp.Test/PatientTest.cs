@@ -17,10 +17,10 @@ namespace FysioApp.Test
             {
                 if (attributeFor == "Birth")
                     p.Birthdate = d;
-                else if (attributeFor == "Register")
-                    p.RegisterDate = d;
-                else
-                    p.FireDate = d;
+                //else if (attributeFor == "Register")
+                //    p.RegisterDate = d;
+                //else
+                //    p.FireDate = d;
             }
             catch {
                 throw;
@@ -80,57 +80,57 @@ namespace FysioApp.Test
             Assert.Equal("Date can't be in the fututre", ex.Message);
         }
 
-        [Fact]
-        public void Is_Registery_Date_Not_In_Future()
-        {
-            // Arrange
-            Patient p = new();
-            AddDates(p, "Register", DateTime.Now.AddDays(-3));
+        //[Fact]
+        //public void Is_Registery_Date_Not_In_Future()
+        //{
+        //    // Arrange
+        //    Patient p = new();
+        //    AddDates(p, "Register", DateTime.Now.AddDays(-3));
 
-            // Act
-            DateTime d = p.RegisterDate;
+        //    // Act
+        //    DateTime d = p.RegisterDate;
 
-            // Assert
-            Assert.True(d < DateTime.Now);
-        }
+        //    // Assert
+        //    Assert.True(d < DateTime.Now);
+        //}
 
-        [Fact]
-        public void Is_Fire_Date_After_Registery_Date()
-        {
-            // Arrange
-            Patient p = new();
-            AddDates(p, "Register", DateTime.Now.AddDays(-3));
-            AddDates(p, "Fire", DateTime.Now);
+        //[Fact]
+        //public void Is_Fire_Date_After_Registery_Date()
+        //{
+        //    // Arrange
+        //    Patient p = new();
+        //    AddDates(p, "Register", DateTime.Now.AddDays(-3));
+        //    AddDates(p, "Fire", DateTime.Now);
 
-            // Act
-            DateTime rd = p.RegisterDate;
-            DateTime fd = p.FireDate;
+        //    // Act
+        //    DateTime rd = p.RegisterDate;
+        //    DateTime fd = p.FireDate;
 
-            // Assert
-            Assert.True(rd < fd);
-        }
+        //    // Assert
+        //    Assert.True(rd < fd);
+        //}
 
-        [Fact]
-        public void Is_Fire_Date_Not_After_Registery_Date()
-        {
-            // Arrange
-            Patient p = new();
-            AddDates(p, "Register", DateTime.Now.AddDays(-3));
+        //[Fact]
+        //public void Is_Fire_Date_Not_After_Registery_Date()
+        //{
+        //    // Arrange
+        //    Patient p = new();
+        //    AddDates(p, "Register", DateTime.Now.AddDays(-3));
 
-            //Act
-            var ex = Assert.Throws<InvalidOperationException>(() => AddDates(p, "Fire", DateTime.Now.AddDays(-5)));
+        //    //Act
+        //    var ex = Assert.Throws<InvalidOperationException>(() => AddDates(p, "Fire", DateTime.Now.AddDays(-5)));
 
-            Assert.Equal("The Fire Date can't be before the Register date", ex.Message);
-        }
+        //    Assert.Equal("The Fire Date can't be before the Register date", ex.Message);
+        //}
 
         [Fact]
         public void Can_Add_New_Patient()
         {
             // Arrange
-            Repository r = new();
+            PatientRepository r = new();
             Patient p = new();
             p.Name = "Kira";
-            p.ID = "0123456";
+            p.PatientNumber = "0123456";
             AddDates(p, "Birth", DateTime.Now.AddYears(-21).AddDays(-3));
             AddDates(p, "Register", DateTime.Now.AddDays(-3));
             AddDates(p, "Fire", DateTime.Now);

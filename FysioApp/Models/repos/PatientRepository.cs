@@ -5,33 +5,33 @@ using System.Threading.Tasks;
 
 namespace FysioApp.Models
 {
-    public class Repository : IRepository
+    public class PatientRepository : IRepository<Patient>
     {
-        public List<Patient> Patients { get; init; }
+        public List<Patient> Items { get; init; }
 
-        public Repository() => Patients = new List<Patient>();
+        public PatientRepository() => Items = new List<Patient>();
 
         public void Add(Patient patient) 
         {
             patient.Index = GetSize();
-            Patients.Add(patient);
+            Items.Add(patient);
         }
 
         public Patient Get(int id)
         {
-            return Patients[id];
+            return Items[id];
         }
 
         public int GetSize()
         {
-            return Patients.Count;
+            return Items.Count;
         }
 
         public bool Exists(int id)
         {
             try
             {
-                return Patients.Contains(Patients[id]);
+                return Items.Contains(Items[id]);
             }
             catch 
             {
@@ -41,8 +41,15 @@ namespace FysioApp.Models
 
         public List<Patient> GetAll() 
         {
-            return Patients;
+            return Items;
         }
 
+        public Patient GetItemByID(int id)
+        {
+            foreach (Patient p in Items)
+                if (p.PatientID == id)
+                    return p;
+            return null;
+        }
     }
 }

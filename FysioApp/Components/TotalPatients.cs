@@ -9,9 +9,9 @@ namespace FysioApp.Components
 {
     public class TotalPatients : ViewComponent
     {
-        IRepository _repository;
+        readonly IRepository<Patient> _repository;
 
-        public TotalPatients(IRepository repository)
+        public TotalPatients(IRepository<Patient> repository)
         {
             _repository = repository;
         }

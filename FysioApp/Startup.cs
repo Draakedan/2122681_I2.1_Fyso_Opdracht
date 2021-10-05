@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FysioApp.Models;
 using FysioApp.Components;
+using FysioApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,15 @@ namespace FysioApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IRepository, Repository>();
+            services.AddSingleton<IRepository<Patient>, PatientRepository>();
+            services.AddSingleton<IRepository<ActionPlan>, ActionPlanRepository>();
+            services.AddSingleton<IRepository<Adress>, AdressRepository>();
+            services.AddSingleton<IRepository<Comment>, CommentRepositroy>();
+            services.AddSingleton<IRepository<FysioWorker>, FysioWorkerRepositroy>();
+            services.AddSingleton<IRepository<PatientFile>, PatientFileRepository>();
+            services.AddSingleton<IRepository<TherapySession>, TherapySessionRepository>();
             services.AddControllersWithViews();
+            services.AddSingleton<DataReviever>();
             services.AddSingleton<TotalPatients>();
         }
 

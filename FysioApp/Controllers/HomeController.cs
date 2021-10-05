@@ -7,18 +7,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FysioApp.Data;
 
 namespace FysioApp.Controllers
 {
     public class HomeController : Controller
     {
         //private readonly ILogger<HomeController> _logger;
-        private readonly IRepository _repository;
+        private readonly IRepository<Patient> _repository;
+        private readonly DataReviever _reciever;
 
-        public HomeController(/*ILogger<HomeController> logger,*/ IRepository repository)
+        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever dataReviever)
         {
             //_logger = logger;
             _repository = repository;
+            _reciever = dataReviever;
         }
 
         [Route("Home/Index")]
@@ -27,11 +30,6 @@ namespace FysioApp.Controllers
         [Route("Patients")]
         public IActionResult Index()
         {
-            if (_repository.GetAll().Count == 0)
-            {
-                GeneratePatientList();
-                return View(_repository.GetAll());
-            }
             return View(_repository.GetAll());
         }
 
@@ -41,11 +39,6 @@ namespace FysioApp.Controllers
             if (_repository.Exists(id))
                 return View("PatientDetails", _repository.Get(id));
             else return View("NotFound");
-        }
-
-        private void GeneratePatientList() 
-        {
-            _repository.Add(new("Kira", "012345", new DateTime(1999, 12, 17), DateTime.Now, DateTime.Now.AddDays(20)));
         }
 
         [HttpGet]
@@ -59,14 +52,10 @@ namespace FysioApp.Controllers
         {
             if (ModelState.GetValidationState(nameof(patient.Name)) == ModelValidationState.Valid && patient.Name == null)
                 ModelState.AddModelError(nameof(patient.Name), "Naam mag niet leeg zijn!");
-            if (ModelState.GetValidationState(nameof(patient.ID)) == ModelValidationState.Valid && patient.ID == null)
-                ModelState.AddModelError(nameof(patient.ID), "ID mag niet leeg zijn!");
+            if (ModelState.GetValidationState(nameof(patient.PatientNumber)) == ModelValidationState.Valid && patient.PatientNumber == null)
+                ModelState.AddModelError(nameof(patient.PatientNumber), "ID mag niet leeg zijn!");
             if (ModelState.GetValidationState(nameof(patient.Birthdate)) == ModelValidationState.Valid && patient.Birthdate > DateTime.Now)
                 ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet later dan vandaag");
-            if (ModelState.GetValidationState(nameof(patient.RegisterDate)) == ModelValidationState.Valid && patient.RegisterDate > DateTime.Now)
-                ModelState.AddModelError(nameof(patient.RegisterDate), "Datum kan niet later dan vandaag");
-            if (ModelState.GetValidationState(nameof(patient.FireDate)) == ModelValidationState.Valid && patient.FireDate <= patient.RegisterDate)
-                ModelState.AddModelError(nameof(patient.FireDate), "Datum ontslag kan niet voorafgaand aan de registratie datum gaan");
 
             if (ModelState.IsValid)
             {

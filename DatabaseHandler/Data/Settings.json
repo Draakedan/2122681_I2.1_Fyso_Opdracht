@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "NSFG (Not Safe For Git)"
+  }
+}
