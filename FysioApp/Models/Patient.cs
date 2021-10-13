@@ -9,19 +9,34 @@ namespace FysioApp.Models
     {
         public Patient()
         { }
-        public Patient(string Name, string ID, DateTime Birthdate, DateTime RegisterDate, DateTime FireDate)
+        public Patient(string Name, string PatientNumber, DateTime Birthdate)
         {
+            this.PatientNumber = PatientNumber;
             this.Name = Name;
-            this.ID = ID;
             this.birthdate = Birthdate;
-            this.registerDate = RegisterDate;
-            this.fireDate = FireDate;
             SetAge();
         }
 
+        public int PatientID { get; set; }
+        public string EnsuranceCompany { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public void Returns(Patient patient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Adress Adress { get; set; }
+        public string StudentNumber { get; set; }
+        public string WorkerNumber { get; set; }
         public string Name { get; set; }
-        public string ID { get; set; }
+        public string PatientNumber { get; set; }
+        public bool IsMale { get; set; }
         public int Age { get; set; }
+        public bool IsStudent { get; set; }
+
+        public int Index { get; set; }
 
         private DateTime birthdate;
         public DateTime Birthdate
@@ -32,24 +47,11 @@ namespace FysioApp.Models
                 SetBirthDate(value);
             }
         }
-        private DateTime registerDate;
-        public DateTime RegisterDate
-        {
-            get { return registerDate; }
-            set { SetRegisterDate(value); }
-        }
 
-        private DateTime fireDate;
-        public DateTime FireDate
-        {
-            get { return fireDate; }
-            set { SetFireDate(value); }
-        }
-        public int Index { get; set; }
 
         public override string ToString()
         {
-            return $"{Name}, {ID}, {birthdate}, {registerDate}, {fireDate}";
+            return $"name: {Name}, PatientNumber: {PatientNumber}, Birthdate: {birthdate}, Email: {Email}, PhoneNumber: {PhoneNumber}";
         }
 
         public void SetAge()
@@ -67,30 +69,6 @@ namespace FysioApp.Models
             {
                 this.birthdate = value;
                 SetAge();
-            }
-            else
-                throw new InvalidOperationException("Date can't be in the fututre");
-        }
-
-        private void SetRegisterDate(DateTime value)
-        {
-            if (DateTime.Now.CompareTo(value) > 0)
-            {
-                this.registerDate = value;
-            }
-            else
-                throw new InvalidOperationException("Date can't be in the fututre");
-        }
-
-        private void SetFireDate(DateTime value)
-        {
-            var date = registerDate;
-            if (DateTime.Now.CompareTo(value) > 0)
-            {
-                if (registerDate.CompareTo(value) < 0)
-                    this.fireDate = value;
-                else
-                    throw new InvalidOperationException("The Fire Date can't be before the Register date");
             }
             else
                 throw new InvalidOperationException("Date can't be in the fututre");

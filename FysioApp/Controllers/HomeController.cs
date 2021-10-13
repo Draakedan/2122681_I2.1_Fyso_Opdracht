@@ -7,34 +7,45 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FysioApp.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FysioApp.Controllers
 {
     public class HomeController : Controller
     {
         //private readonly ILogger<HomeController> _logger;
-        private readonly IRepository _repository;
+        private readonly IRepository<Patient> _repository;
+        private readonly DataReviever _reciever;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(/*ILogger<HomeController> logger,*/ IRepository repository)
+        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever dataReviever, UserManager<IdentityUser> userManager)
         {
             //_logger = logger;
             _repository = repository;
+            _reciever = dataReviever;
+            _userManager = userManager;
         }
 
         [Route("Home/Index")]
-        [Route("Home/Patients")]
+       
         [Route("/")]
-        [Route("Patients")]
+        
         public IActionResult Index()
         {
-            if (_repository.GetAll().Count == 0)
-            {
-                GeneratePatientList();
-                return View(_repository.GetAll());
-            }
+            return View();
+        }
+
+        [Authorize]
+        [Authorize(Roles = "PhysicalTherapist, Intern")]
+        public IActionResult Patients()
+        {
             return View(_repository.GetAll());
         }
 
+        [Authorize]
+        [Authorize(Roles = "PhysicalTherapist, Intern")]
         [Route("Home/Patients/{id:int}")]
         public IActionResult GetPatientDetails(int id)
         {
@@ -43,36 +54,29 @@ namespace FysioApp.Controllers
             else return View("NotFound");
         }
 
-        private void GeneratePatientList() 
-        {
-            _repository.Add(new("Kira", "012345", new DateTime(1999, 12, 17), DateTime.Now, DateTime.Now.AddDays(20)));
-        }
-
+        [Authorize(Roles = "PhysicalTherapist")]
         [HttpGet]
         public IActionResult NewPatient()
         {
             return View();
         }
 
+        [Authorize(Roles = "PhysicalTherapist")]
         [HttpPost]
         public IActionResult NewPatient(Patient patient)
         {
             if (ModelState.GetValidationState(nameof(patient.Name)) == ModelValidationState.Valid && patient.Name == null)
                 ModelState.AddModelError(nameof(patient.Name), "Naam mag niet leeg zijn!");
-            if (ModelState.GetValidationState(nameof(patient.ID)) == ModelValidationState.Valid && patient.ID == null)
-                ModelState.AddModelError(nameof(patient.ID), "ID mag niet leeg zijn!");
+            if (ModelState.GetValidationState(nameof(patient.PatientNumber)) == ModelValidationState.Valid && patient.PatientNumber == null)
+                ModelState.AddModelError(nameof(patient.PatientNumber), "ID mag niet leeg zijn!");
             if (ModelState.GetValidationState(nameof(patient.Birthdate)) == ModelValidationState.Valid && patient.Birthdate > DateTime.Now)
                 ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet later dan vandaag");
-            if (ModelState.GetValidationState(nameof(patient.RegisterDate)) == ModelValidationState.Valid && patient.RegisterDate > DateTime.Now)
-                ModelState.AddModelError(nameof(patient.RegisterDate), "Datum kan niet later dan vandaag");
-            if (ModelState.GetValidationState(nameof(patient.FireDate)) == ModelValidationState.Valid && patient.FireDate <= patient.RegisterDate)
-                ModelState.AddModelError(nameof(patient.FireDate), "Datum ontslag kan niet voorafgaand aan de registratie datum gaan");
 
             if (ModelState.IsValid)
             {
                 patient.SetAge();
                 _repository.Add(patient);
-                return View("Index", _repository.GetAll());
+                return View("Patients", _repository.GetAll());
             }
             return View();
         }
