@@ -1,0 +1,36 @@
+﻿@model FysioApp.Models.Patient
+@{
+    ViewData["Title"] = "Add a Patient";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="NewPatient" method="post">
+        <div>
+            <label asp-for="Name">Voer naam patient in:</label>
+            <div><span asp-validation-for="Name" class="text-danger"></span></div>
+            <input asp-for="Name" class="form-control" type="text" />
+        </div>
+        <div>
+            <label asp-for="PatientNumber">Voer ID patient in:</label>
+            <div><span asp-validation-for="PatientNumber" class="text-danger"></span></div>
+            <input asp-for="PatientNumber" class="form-control" type="text" />
+        </div>
+        <div>
+            <label asp-for="Birthdate">Voer geboortedatum patient in:</label>
+            <div><span asp-validation-for="Birthdate" class="text-danger"></span></div>
+            <input asp-for="Birthdate" class="form-control" type="date" />
+        </div>
+        @*<div>
+            <label asp-for="RegisterDate">Voer datum van registratie in:</label>
+            <div><span asp-validation-for="RegisterDate" class="text-danger"></span></div>
+            <input asp-for="RegisterDate" class="form-control" type="date" />
+        </div>
+        <div>
+            <label asp-for="FireDate">Voer datum voor ontslag in:</label>
+            <div><span asp-validation-for="FireDate" class="text-danger"></span></div>
+            <input asp-for="FireDate" class="form-control" type="date" />
+        </div>*@
+
+        <button type="submit" class="btn btn-info">Toevoegen</button>
+    </form>
+    </div>
