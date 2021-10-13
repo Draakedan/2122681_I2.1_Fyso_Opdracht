@@ -11,6 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using FysioApp.AuthorizationRequirements;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FysioApp
 {
@@ -18,7 +24,7 @@ namespace FysioApp
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration; 
         }
 
         public IConfiguration Configuration { get; }
@@ -26,6 +32,57 @@ namespace FysioApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvcCore()
+                .AddAuthorization();
+
+            services.AddDbContext<FysioIdentityDBContext>(config =>
+            {
+                config.UseSqlServer();
+            });
+
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                //config.SignIn.RequireConfirmedEmail = true;
+            })
+                .AddEntityFrameworkStores<FysioIdentityDBContext>()
+                .AddRoles<IdentityRole>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Identity.Cookie";
+                config.LoginPath = "/Account/Login";
+            });
+
+            services.AddAuthorization(config =>
+            {
+                AuthorizationPolicyBuilder defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                var defaultAuthPolicy = defaultAuthBuilder
+                .RequireAuthenticatedUser()
+                .RequireClaim(ClaimTypes.DateOfBirth)
+                .Build();
+
+                config.AddPolicy("admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+                //config.AddPolicy("PhysicalTherapist")
+                config.AddPolicy("Claim.DoB", policyBuilder =>
+                {
+                    policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
+                });
+            });
+
+            services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
+
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<FysioIdentityDBContext>()
+            //    .AddDefaultTokenProviders();
+
+
+            //services.AddAuthentication("PhysicalTherapistAuth")
+            //    .AddCookie("PhysicalTherapistAuth", config =>
+            //    {
+            //        config.Cookie.Name = "PhysicalTherpaist";
+            //    });
+
             services.AddSingleton<IRepository<Patient>, PatientRepository>();
             services.AddSingleton<IRepository<ActionPlan>, ActionPlanRepository>();
             services.AddSingleton<IRepository<Adress>, AdressRepository>();
@@ -55,6 +112,8 @@ namespace FysioApp
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

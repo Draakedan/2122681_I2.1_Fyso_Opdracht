@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FysioApp.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FysioApp.Controllers
 {
@@ -16,23 +18,34 @@ namespace FysioApp.Controllers
         //private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Patient> _repository;
         private readonly DataReviever _reciever;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever dataReviever)
+        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever dataReviever, UserManager<IdentityUser> userManager)
         {
             //_logger = logger;
             _repository = repository;
             _reciever = dataReviever;
+            _userManager = userManager;
         }
 
         [Route("Home/Index")]
-        [Route("Home/Patients")]
+       
         [Route("/")]
-        [Route("Patients")]
+        
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [Authorize(Roles = "PhysicalTherapist, Intern")]
+        public IActionResult Patients()
         {
             return View(_repository.GetAll());
         }
 
+        [Authorize]
+        [Authorize(Roles = "PhysicalTherapist, Intern")]
         [Route("Home/Patients/{id:int}")]
         public IActionResult GetPatientDetails(int id)
         {
@@ -41,12 +54,14 @@ namespace FysioApp.Controllers
             else return View("NotFound");
         }
 
+        [Authorize(Roles = "PhysicalTherapist")]
         [HttpGet]
         public IActionResult NewPatient()
         {
             return View();
         }
 
+        [Authorize(Roles = "PhysicalTherapist")]
         [HttpPost]
         public IActionResult NewPatient(Patient patient)
         {
@@ -61,7 +76,7 @@ namespace FysioApp.Controllers
             {
                 patient.SetAge();
                 _repository.Add(patient);
-                return View("Index", _repository.GetAll());
+                return View("Patients", _repository.GetAll());
             }
             return View();
         }

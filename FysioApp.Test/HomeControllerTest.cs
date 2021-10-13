@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FysioApp.Controllers;
+using FysioApp.Data;
 using FysioApp.Components;
 using FysioApp.Models;
 using Xunit;
@@ -18,14 +19,11 @@ namespace FysioApp.Test
         [Fact]
         public void Index_Should_Return_Index_View()
         {
-            var PatientMock = new Mock<IRepository<Patient>>();
+            var PatientMock = new Mock<PatientRepository>();
 
-            var sut = new HomeController(PatientMock.Object);
+            var sut = new HomeController(PatientMock.Object, null, null);
 
-            PatientMock.Setup(repository => repository.GetAll()).Returns(new List<Patient>()
-            {
-                new Patient("Kira", "0123456", new DateTime(1999, 12, 17))
-            });
+            PatientMock.Object.GetAll(true, new Patient("Kira", "0123456", new DateTime(1999, 12, 17)));
 
             var result = sut.Index() as ViewResult;
 
@@ -35,9 +33,9 @@ namespace FysioApp.Test
         [Fact]
         public void New_Patient_Should_Contain_Correct_Age()
         {
-            var PatientMock = new Mock<IRepository<Patient>>();
+            var PatientMock = new Mock<PatientRepository>();
 
-            var sut = new HomeController(PatientMock.Object);
+            var sut = new HomeController(PatientMock.Object, null, null);
 
             Patient patient = new("Kira", "0123456", DateTime.Now.AddDays(-3).AddYears(-21));
 
@@ -50,9 +48,9 @@ namespace FysioApp.Test
         [Fact]
         public void NewPatient_Should_Return_Error_When_Birthdate_Is_After_Today()
         {
-            var PatientMock = new Mock<IRepository<Patient>>();
+            var PatientMock = new Mock<PatientRepository>();
 
-            var sut = new HomeController(PatientMock.Object);
+            var sut = new HomeController(PatientMock.Object, null, null);
 
             Patient patient = new("Kira", "0123456", DateTime.Now.AddDays(3));
 
@@ -70,16 +68,16 @@ namespace FysioApp.Test
         [Fact]
         public void NewPatient_Given_Empty_Birthday_Should_Not_Add_Patient()
         {
-            var PatientMock = new Mock<IRepository<Patient>>();
+            var PatientMock = new Mock<PatientRepository>();
 
-            var sut = new HomeController(PatientMock.Object);
+            var sut = new HomeController(PatientMock.Object, null, null);
 
             Patient patient = new("Kira", "0123456", new DateTime());
 
             sut.ModelState.AddModelError(nameof(patient.Birthdate), "Birthday should not be empty");
             sut.NewPatient(patient);
 
-            PatientMock.Verify(PatientMock => PatientMock.Add(It.IsAny<Patient>()), Times.Never);
+            Assert.Empty(PatientMock.Object.GetAll());
 
         }
 
@@ -156,13 +154,14 @@ namespace FysioApp.Test
         [Fact]
         public void NewPatient_Given_All_Correct_Inputs_Should_Add_Patient()
         {
-            var PatientMock = new Mock<IRepository<Patient>>();
-            var sut = new HomeController(PatientMock.Object);
+            var PatientMock = new Mock<PatientRepository>();
+
+            var sut = new HomeController(PatientMock.Object, null, null);
 
             Patient patient = new("Kira", "0123456", DateTime.Now.AddYears(-21).AddDays(-3));
             sut.NewPatient(patient);
 
-            PatientMock.Verify(PatientMock => PatientMock.Add(It.IsAny<Patient>()), Times.Once);
+            Assert.Single(PatientMock.Object.GetAll());
         }
 
     }

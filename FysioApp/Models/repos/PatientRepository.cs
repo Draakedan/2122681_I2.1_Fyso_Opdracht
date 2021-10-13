@@ -44,6 +44,13 @@ namespace FysioApp.Models
             return Items;
         }
 
+        public List<Patient> GetAll(bool isTest, Patient patient)
+        {
+            if (isTest)
+                Items.Add(patient);
+            return GetAll();
+        }
+
         public Patient GetItemByID(int id)
         {
             foreach (Patient p in Items)

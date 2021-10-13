@@ -68,17 +68,17 @@ namespace FysioApp.Test
             Assert.True(d < DateTime.Now);
         }
 
-        [Fact]
-        public void Is_Registery_Date_In_Future()
-        {
-            // Arrange
-            Patient p = new();
+        //[Fact]
+        //public void Is_Registery_Date_In_Future()
+        //{
+        //    // Arrange
+        //    Patient p = new();
 
-            //Act
-            var ex = Assert.Throws<InvalidOperationException>(() => AddDates(p, "Register", DateTime.Now.AddDays(3)));
+        //    //Act
+        //    var ex = Assert.Throws<InvalidOperationException>(() => AddDates(p, "Register", DateTime.Now.AddDays(3)));
 
-            Assert.Equal("Date can't be in the fututre", ex.Message);
-        }
+        //    Assert.Equal("Date can't be in the fututre", ex.Message);
+        //}
 
         //[Fact]
         //public void Is_Registery_Date_Not_In_Future()

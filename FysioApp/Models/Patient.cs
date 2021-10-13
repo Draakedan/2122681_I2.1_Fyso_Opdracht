@@ -21,6 +21,12 @@ namespace FysioApp.Models
         public string EnsuranceCompany { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+
+        public void Returns(Patient patient)
+        {
+            throw new NotImplementedException();
+        }
+
         public Adress Adress { get; set; }
         public string StudentNumber { get; set; }
         public string WorkerNumber { get; set; }

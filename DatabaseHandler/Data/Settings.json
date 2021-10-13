@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "NSFG (Not Safe For Git)"
+    "DefaultConnection": "Data Source=DESKTOP-VH9B6RM;Initial Catalog=FysioAppDB;Integrated Security=True"
   }
 }

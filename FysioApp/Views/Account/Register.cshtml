@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container">
+    <form class="form-group" asl-action="Register" method="post">
+        <div>
+            <label>Username: </label>
+            <input class="form-control" name="username" type="text"/>
+        </div>
+        <div>
+            <label>Email: </label>
+            <input class="form-control" name="email" type="email" />
+        </div>
+        <div>
+            <label>Passord: </label>
+            <input class="form-control" name="password" type="password"/>
+        </div>
+        <div>
+            <label>Comfirm Password: </label>
+            <input class="form-control" name="comfirmPass" type="password" />
+        </div>
+
+        <button type="submit" class="btn btn-info">Register</button>
+    </form>
+</div>
