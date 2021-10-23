@@ -32,7 +32,15 @@ namespace FysioAppUX.Data
             this.PatientFiles = patientFiles;
             this.TherapySessions = therapySessions;
 
-            FillAll();
+            try
+            {
+                FillAll();
+            }
+            catch {
+                Console.WriteLine("DatabaseConnection unavailable");
+            }
+
+            
 
         }
         private void FillAll()

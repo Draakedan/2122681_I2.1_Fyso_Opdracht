@@ -23,15 +23,27 @@ namespace DatabaseHandler.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(GetConnectionStringFromJson());
+            try
+            {
+                optionsBuilder.UseSqlServer(GetConnectionStringFromJson());
+            }
+            catch { 
+            }
         }
 
         private static string GetConnectionStringFromJson()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"data/Settings.json");
-            using StreamReader r = new(path);
-            String json = r.ReadToEnd();
-            return (string)JObject.Parse(json)["ConnectionStrings"]["DefaultConnection"];
+            try
+            {
+                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"data/Settings.json");
+                using StreamReader r = new(path);
+                String json = r.ReadToEnd();
+                string res = (string)JObject.Parse(json)["ConnectionStrings"]["DefaultConnection"];
+                return res;
+            }
+            catch {
+                return null;
+            }
         }
     }
 }
