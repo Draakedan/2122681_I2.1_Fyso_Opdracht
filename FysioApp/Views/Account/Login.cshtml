@@ -1,19 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Inloggen";
 }
 
 <div class="container">
     <form class="form-group" asp-action="Login" method="post">
         <div>
-            <label>Username: </label>
+            <label>Gebruikersnaam: </label>
             <input class="form-control" name="username" type="text"/>
         </div>
 
         <div>
-            <label>Password: </label>
-            <input class="form-control" name="password"  type="text"/>
+            <label>Wachtwoord: </label>
+            <input class="form-control" name="password"  type="password"/>
         </div>
 
-        <button type="submit" class="btn btn-info">Login</button>
+        <button type="submit" class="btn btn-info">Inloggen</button>
     </form>
     </div>

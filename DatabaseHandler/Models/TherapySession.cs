@@ -11,13 +11,13 @@ namespace DatabaseHandler.Models
 #nullable enable
 
         [Key]
-        public int TherapySessionId { get; set; }
+        public int Id { get; set; }
 
         public int Type { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
-        public string? Location { get; set; }
+        public bool IsPractiseRoom { get; set; }
 
         public string? Specials { get; set; }
 
@@ -25,6 +25,12 @@ namespace DatabaseHandler.Models
 
         public FysioWorker SesionDoneBy { get; set; }
 
-        public DateTime SessionTime { get; set; }
+        public DateTime SessionStartTime { get; set; }
+        public DateTime SessionEndTime { get; set; }
+
+        public override string ToString()
+        {
+            return $"ID: {Id}, Type: {Type}, Description: {Description}, Location: {IsPractiseRoom}, Specials: {Specials ?? "none"}, Session Done By: {SesionDoneBy}, SessionTime: {SessionStartTime}";
+        }
     }
 }

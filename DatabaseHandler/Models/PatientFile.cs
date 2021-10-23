@@ -22,6 +22,8 @@ namespace DatabaseHandler.Models
 
         public string diagnoseCode { get; set; }
 
+        public string diagnoseCodeComment { get; set; }
+
         public bool isStudent { get; set; }
 
         public int intakeDoneByID { get; set; }

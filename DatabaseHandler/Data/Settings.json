@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=DESKTOP-VH9B6RM;Initial Catalog=FysioAppDB;Integrated Security=True"
+    "DefaultConnection": "Data Source=DESKTOP-VH9B6RM;Initial Catalog=FysioAppDB;Integrated Security=True; MultipleActiveResultSets=True"
   }
 }

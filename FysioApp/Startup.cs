@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FysioApp.Models;
-using FysioApp.Components;
-using FysioApp.Data;
+using DatabaseHandler.Models;
+using FysioAppUX.Components;
+using FysioAppUX.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-using FysioApp.AuthorizationRequirements;
+using FysioAppUX.AuthorizationRequirements;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace FysioApp
+namespace FysioAppUX
 {
     public class Startup
     {

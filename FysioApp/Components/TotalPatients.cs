@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using FysioApp.Models;
+using DatabaseHandler.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FysioApp.Components
+namespace FysioAppUX.Components
 {
     public class TotalPatients : ViewComponent
     {

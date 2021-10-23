@@ -11,7 +11,7 @@ namespace DatabaseHandler
             {
                 throw new ArgumentNullException(nameof(args));
             }
-            //Seed seed = new();
+            Seed seed = new();
             DataRepository reop = new();
             Console.WriteLine(reop.GetPatientFiles());
         }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FysioApp.Data
+namespace FysioAppUX.Data
 {
     public class FysioIdentityDBContext : IdentityDbContext
     {

@@ -1,4 +1,4 @@
-﻿using FysioApp.Models;
+﻿using DatabaseHandler.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -7,25 +7,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using FysioApp.Data;
+using FysioAppUX.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FysioApp.Controllers
+namespace FysioAppUX.Controllers
 {
     public class HomeController : Controller
     {
         //private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Patient> _repository;
-        private readonly DataReviever _reciever;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly DataReviever _dataReviever;
 
-        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever dataReviever, UserManager<IdentityUser> userManager)
+        public HomeController(/*ILogger<HomeController> logger,*/ IRepository<Patient> repository, DataReviever reviever, UserManager<IdentityUser> userManager)
         {
             //_logger = logger;
             _repository = repository;
-            _reciever = dataReviever;
             _userManager = userManager;
+            _dataReviever = reviever;
         }
 
         [Route("Home/Index")]
@@ -41,7 +41,7 @@ namespace FysioApp.Controllers
         [Authorize(Roles = "PhysicalTherapist, Intern")]
         public IActionResult Patients()
         {
-            return View(_repository.GetAll());
+            return View(_repository.GetAll()/*.ToList()*/);
         }
 
         [Authorize]

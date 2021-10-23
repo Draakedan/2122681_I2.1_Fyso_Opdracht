@@ -154,7 +154,11 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnsuranceCompany")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsMale")
                         .HasColumnType("bit");
@@ -171,7 +175,6 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentNumber")
@@ -213,6 +216,10 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("diagnoseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("diagnoseCodeComment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -261,16 +268,17 @@ namespace DatabaseHandler.Migrations
 
             modelBuilder.Entity("DatabaseHandler.Models.TherapySession", b =>
                 {
-                    b.Property<int>("TherapySessionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsPractiseRoom")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("PatientFileID")
                         .HasColumnType("int");
@@ -281,7 +289,10 @@ namespace DatabaseHandler.Migrations
                     b.Property<int>("SessionDoneByID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("SessionTime")
+                    b.Property<DateTime>("SessionEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SessionStartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Specials")
@@ -290,7 +301,7 @@ namespace DatabaseHandler.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("TherapySessionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PatientFileID");
 

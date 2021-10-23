@@ -228,20 +228,22 @@ namespace DatabaseHandler.Data
             {
                 Type = 1003,
                 Description = "Tijdens deze sessie wordt er aan de benen gewerkt",
-                Location = "LA503",
+                IsPractiseRoom = true,
                 SessionDoneByID = worker.FysioWorkerID,
                 SesionDoneBy = worker,
-                SessionTime = DateTime.Now.AddDays(10)
+                SessionStartTime = DateTime.Now.AddDays(10),
+                SessionEndTime = DateTime.Now.AddDays(10).AddHours(1)
             };
 
             therapySession2 = new()
             {
                 Type = 1003,
                 Description = "We gaan in deze sesie verder aan de benen",
-                Location = "LA501",
+                IsPractiseRoom = false,
                 SesionDoneBy = student,
                 SessionDoneByID = student.FysioWorkerID,
-                SessionTime = DateTime.Now.AddDays(13)
+                SessionStartTime = DateTime.Now.AddDays(13),
+                SessionEndTime = DateTime.Now.AddDays(13).AddHours(1)
             };
 
             context.SaveChanges();
@@ -257,6 +259,7 @@ namespace DatabaseHandler.Data
                 age = patient.Age,
                 issueDescription = "Patient heeft last van zijn been",
                 diagnoseCode = "1111",
+                diagnoseCodeComment = "bla bla bla....",
                 isStudent = patient.IsStudent,
                 intakeDoneBy = student,
                 intakeDoneByID = student.FysioWorkerID,

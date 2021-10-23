@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseHandler.Data;
-using FysioApp.Models;
+using DatabaseHandler.Models;
 using Newtonsoft.Json.Linq;
 
 
-namespace FysioApp.Data
+namespace FysioAppUX.Data
 {
     public class DataReviever
     {
@@ -19,11 +19,11 @@ namespace FysioApp.Data
         private readonly IRepository<PatientFile> PatientFiles;
         private readonly IRepository<TherapySession> TherapySessions;
 
-        private readonly DataRepository DataRepo;
+        private readonly FysioDataContext context;
 
         public DataReviever(IRepository<ActionPlan> actionPlans, IRepository<Adress> adresses, IRepository<Comment> comments, IRepository<FysioWorker> fysioWorkers, IRepository<Patient> patients, IRepository<PatientFile> patientFiles, IRepository<TherapySession> therapySessions)
         {
-            DataRepo = new();
+            context = new();
             this.ActionPlans = actionPlans;
             this.Adresses = adresses;
             this.Comments = comments;
@@ -47,178 +47,75 @@ namespace FysioApp.Data
         }
 
         private void FillActionPlan()
-        {
-            JArray array = DataRepo.GetActionPlans();
-            ActionPlan action;
-            foreach (JObject o in array)
-            {
-                action = new()
-                {
-                    ActionID = (int)o["ActionID"],
-                    SessionsPerWeek = (int)o["SessionsPerWeek"],
-                    TimePerSession = (int)o["TimePerSession"]
-                };
-                ActionPlans.Add(action);
-            }
+        { 
+            foreach (ActionPlan a in context.ActionPlans)
+                ActionPlans.Add(a);
         }
 
         private void FillAdress()
         {
-            JArray array = DataRepo.GetAdresses();
-            Adress adress;
-            foreach (JObject o in array)
-            {
-                adress = new()
-                {
-                    AdressID = (int)o["AdressID"],
-                    Country = (string)o["Country"],
-                    City = (string)o["City"],
-                    PostalCode = (string)o["PostalCode"],
-                    Street = (string)o["Street"],
-                    HouseNumber = (string)o["HouseNumber"]
-                };
-                Adresses.Add(adress);
-            }
+            foreach (Adress a in context.Adresses)
+                Adresses.Add(a);
         }
 
         private void FillFysioWorkers()
         {
-            JArray array = DataRepo.GetFysioWorkers();
-            FysioWorker worker;
-            foreach (JObject o in array)
-            {
-                worker = new()
-                {
-                    FysioWorkerID = (int)o["FysioWorkerID"],
-                    Name = (string)o["Name"],
-                    Email = (string)o["Email"],
-                    PhoneNumber = (string)o["PhoneNumber"],
-                    WorkerNumber = (string)o["WorkerNumber"],
-                    BIGNumber = (string)o["BIGNumber"],
-                    StudentNumber = (string)o["StudentNumber"],
-                    IsStudent = (bool)o["IsStudent"]
-                };
+            foreach (FysioWorker worker in context.FysioWorkers)
                 FysioWorkers.Add(worker);
-            }
         }
 
         private void FillComments()
         {
-            JArray array = DataRepo.GetComments();
-            Comment comment;
-            foreach (JObject o in array)
+            foreach (Comment c in context.Comments)
             {
-                comment = new()
-                {
-                    CommentId = (int)o["CommentId"],
-                    CommentText = (string)o["CommentText"],
-                    DateMade = (DateTime)o["DateMade"],
-                    CommentMadeBy = FysioWorkers.GetItemByID((int)o["CommenterID"]),
-                    VisibleToPatient = (bool)o["VisibleToPatient"]
-                };
-                Comments.Add(comment);
+                //context.Entry(c)
+                //    .Property(com => com.CommentMadeBy);
+                Comments.Add(c);
             }
         }
 
         private void FillPatients()
         {
-            JArray array = DataRepo.GetPatients();
-            Patient patient;
-            foreach (JObject o in array)
+            foreach (Patient p in context.Patients)
             {
-                patient = new()
-                {
-                    PatientID = (int)o["PatientID"],
-                    EnsuranceCompany = (string)o["EnsuranceCompany"],
-                    Email = (string)o["Email"],
-                    PhoneNumber = (string)o["PhoneNumber"],
-                    Adress = Adresses.GetItemByID((int)o["AdressID"]),
-                    StudentNumber = (string)o["StudentNumber"],
-                    WorkerNumber = (string)o["WorkerNumber"],
-                    Name = (string)o["Name"],
-                    PatientNumber = (string)o["PatientNumber"],
-                    IsMale = (bool)o["IsMale"],
-                    Age = (int)o["Age"],
-                    Birthdate = (DateTime)o["Birthdate"],
-                    IsStudent = (bool)o["IsStudent"]
-                };
-                Patients.Add(patient);
+                //context.Entry(p)
+                //    .Property(pat => pat.Adress);
+                Patients.Add(p);
             }
         }
 
         private void FillTherapySession()
         {
-            JArray array = DataRepo.GetTherapySessions();
-            TherapySession therapySession;
-            foreach (JObject o in array)
+            foreach (TherapySession ts in context.TherapySessions)
             {
-                therapySession = new()
-                {
-                    Id = (int)o["TherapySessionId"],
-                    Type = (int)o["Type"],
-                    Description = (string)o["Description"],
-                    Location = (string)o["Location"],
-                    Specials = (string)o["Specials"],
-                    SesionDoneBy = FysioWorkers.GetItemByID((int)o["SessionDoneByID"]),
-                    SessionTime = (DateTime)o["SessionTime"]
-                };
-                TherapySessions.Add(therapySession);
+                //context.Entry(ts)
+                //    .Property(theraSes => theraSes.SesionDoneBy);
+                TherapySessions.Add(ts);
             }
         }
 
         private void FillPatientFiles()
         {
-            JArray array = DataRepo.GetPatientFiles();
-            PatientFile file;
-            foreach (JObject o in array)
+            foreach (PatientFile file in context.PatientFiles)
             {
-                file = new()
-                {
-                    ID = (int)o["ID"],
-                    Patient = Patients.GetItemByID((int)o["patientID"]),
-                    Age = (int)o["age"],
-                    IssueDescription = (string)o["issueDescription"],
-                    DiagnoseCode = (string)o["diagnoseCode"],
-                    IsStudent = (bool)o["isStudent"],
-                    IntakeDoneBy = FysioWorkers.GetItemByID((int)o["intakeDoneByID"]),
-                    IntakeSuppervisedBy = FysioWorkers.GetItemByID((int)o["IdintakeSuppervisedBy"]),
-                    MainTherapist = FysioWorkers.GetItemByID((int)o["IdmainTherapist"]),
-                    RegisterDate = (DateTime)o["registerDate"],
-                    Comments = GetComments((string)o["CommentIDs"]),
-                    ActionPlan = ActionPlans.GetItemByID((int)o["IdactionPlan"]),
-                    Sessions = GetSessions((string)o["sessionIDs"])
-                };
-
-                try
-                {
-                    file.FireDate = (DateTime)o["fireDate"];
-                }
-                catch {
-                }
+                //context.Entry(file)
+                //    .Property(f => f.patient);
+                //context.Entry(file)
+                //    .Property(f => f.intakeDoneBy);
+                //context.Entry(file)
+                //    .Property(f => f.intakeSuppervisedBy);
+                //context.Entry(file)
+                //    .Property(f => f.mainTherapist);
+                //context.Entry(file)
+                //    .Property(f => f.actionPlan);
+                context.Entry(file)
+                    .Collection(f => f.comments)
+                    .Load();
+                context.Entry(file)
+                    .Collection(f => f.sessions)
+                    .Load();
                 PatientFiles.Add(file);
             }
-        }
-
-        private List<Comment> GetComments(string s)
-        {
-            List<Comment> comments = new();
-
-            string[] list = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            foreach (string item in list)
-                comments.Add(Comments.GetItemByID(int.Parse(item)));
-
-            return comments;
-        }
-
-        private List<TherapySession> GetSessions(string s)
-        {
-            List<TherapySession> sessions = new();
-
-            string[] list = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            foreach (string item in list)
-                sessions.Add(TherapySessions.GetItemByID(int.Parse(item)));
-
-            return sessions;
         }
 
     }

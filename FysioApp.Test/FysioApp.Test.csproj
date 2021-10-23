@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FysioApp\FysioApp.csproj" />
+    <ProjectReference Include="..\FysioApp\FysioAppUX.csproj" />
   </ItemGroup>
 
 </Project>
