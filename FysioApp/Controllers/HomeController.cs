@@ -29,9 +29,7 @@ namespace FysioAppUX.Controllers
         }
 
         [Route("Home/Index")]
-       
         [Route("/")]
-        
         public IActionResult Index()
         {
             return View();

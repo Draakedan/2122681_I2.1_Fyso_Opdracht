@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioAppUX", "FysioAppUX.csproj", "{BE1E42EC-ECF4-44D4-9198-20704658E797}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioApp.Test", "..\FysioApp.Test\FysioApp.Test.csproj", "{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioApp.Tests", "..\FysioApp.Test\FysioApp.Tests.csproj", "{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseHandler", "..\DatabaseHandler\DatabaseHandler.csproj", "{C0B05316-AE52-488D-AA10-92402CD0C2FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerkisListDatabaseHandler", "..\VerkisListDatabaseHandler\VerkisListDatabaseHandler.csproj", "{C358DF24-12F9-4566-8D82-83658AAB5C3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VerkisListDatabaseHandler", "..\VerkisListDatabaseHandler\VerkisListDatabaseHandler.csproj", "{C358DF24-12F9-4566-8D82-83658AAB5C3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

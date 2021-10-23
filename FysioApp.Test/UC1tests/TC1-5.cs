@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FysioApp.Test.UC1tests
+namespace FysioApp.Tests.UC1tests
 {
     class TC1_5
     {

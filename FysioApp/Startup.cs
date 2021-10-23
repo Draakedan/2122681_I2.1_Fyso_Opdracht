@@ -35,42 +35,46 @@ namespace FysioAppUX
             services.AddMvcCore()
                 .AddAuthorization();
 
-            services.AddDbContext<FysioIdentityDBContext>(config =>
+            try
             {
-                config.UseSqlServer();
-            });
-
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
-            {
-                //config.SignIn.RequireConfirmedEmail = true;
-            })
-                .AddEntityFrameworkStores<FysioIdentityDBContext>()
-                .AddRoles<IdentityRole>()
-                .AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(config =>
-            {
-                config.Cookie.Name = "Identity.Cookie";
-                config.LoginPath = "/Account/Login";
-            });
-
-            services.AddAuthorization(config =>
-            {
-                AuthorizationPolicyBuilder defaultAuthBuilder = new AuthorizationPolicyBuilder();
-                var defaultAuthPolicy = defaultAuthBuilder
-                .RequireAuthenticatedUser()
-                .RequireClaim(ClaimTypes.DateOfBirth)
-                .Build();
-
-                config.AddPolicy("admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
-                //config.AddPolicy("PhysicalTherapist")
-                config.AddPolicy("Claim.DoB", policyBuilder =>
+                services.AddDbContext<FysioIdentityDBContext>(config =>
                 {
-                    policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
+                    config.UseSqlServer();
                 });
-            });
 
-            services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
+                services.AddIdentity<IdentityUser, IdentityRole>(config =>
+                {
+                    //config.SignIn.RequireConfirmedEmail = true;
+                })
+                    .AddEntityFrameworkStores<FysioIdentityDBContext>()
+                    .AddRoles<IdentityRole>()
+                    .AddDefaultTokenProviders();
+
+                services.ConfigureApplicationCookie(config =>
+                {
+                    config.Cookie.Name = "Identity.Cookie";
+                    config.LoginPath = "/Account/Login";
+                });
+
+                services.AddAuthorization(config =>
+                {
+                    AuthorizationPolicyBuilder defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                    var defaultAuthPolicy = defaultAuthBuilder
+                    .RequireAuthenticatedUser()
+                    .RequireClaim(ClaimTypes.DateOfBirth)
+                    .Build();
+
+                    config.AddPolicy("admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+                    //config.AddPolicy("PhysicalTherapist")
+                    config.AddPolicy("Claim.DoB", policyBuilder =>
+                        {
+                            policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
+                        });
+                });
+
+                services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
+            }
+            catch { }
 
             //services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<FysioIdentityDBContext>()

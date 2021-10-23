@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DatabaseHandler.Models;
 using Xunit;
 
-namespace FysioApp.Test
+namespace FysioApp.Tests
 {
     public class PatientTest
     {

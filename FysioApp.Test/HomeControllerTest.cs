@@ -11,7 +11,7 @@ using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FysioApp.Test
+namespace FysioApp.Tests
 {
     public class HomeControllerTest
     {
