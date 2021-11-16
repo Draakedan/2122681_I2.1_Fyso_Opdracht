@@ -31,7 +31,7 @@ namespace FysioAppUX.Controllers
         {
             if (Url.IsLocalUrl(ReturnUrl))
             {
-                string[] routes = ReturnUrl.ToLower().Split("/", StringSplitOptions.RemoveEmptyEntries);
+                _ = ReturnUrl.ToLower().Split("/", StringSplitOptions.RemoveEmptyEntries);
                 return RedirectToAction(ReturnUrl);
             }
             else
@@ -43,15 +43,19 @@ namespace FysioAppUX.Controllers
             bool x = await _roleManager.RoleExistsAsync("PhysicalTherapist");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "PhysicalTherapist";
+                var role = new IdentityRole
+                {
+                    Name = "PhysicalTherapist"
+                };
                 await _roleManager.CreateAsync(role);
 
-                var user = new IdentityUser();
-                user.UserName = "default";
-                user.Email = "default@default.com";
+                var user = new IdentityUser
+                {
+                    UserName = "defaultTherapist",
+                    Email = "default@therapist.com"
+                };
 
-                string userPass = "S0mep@ssW0rd";
+                string userPass = "D3f@ultTheR@p1st";
 
                 IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
 
@@ -62,17 +66,47 @@ namespace FysioAppUX.Controllers
             x = await _roleManager.RoleExistsAsync("Intern");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "Intern";
+                var role = new IdentityRole
+                {
+                    Name = "Intern"
+                };
                 await _roleManager.CreateAsync(role);
+
+                var user = new IdentityUser
+                {
+                    UserName = "defaultStudent",
+                    Email = "default@student.com"
+                };
+
+                string userPass = "D3f@ultSt0d3nT";
+
+                IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
+
+                if (newUser.Succeeded)
+                    await _userManager.AddToRoleAsync(user, "Intern");
             }
 
             x = await _roleManager.RoleExistsAsync("Patient");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "Patient";
+                var role = new IdentityRole
+                {
+                    Name = "Patient"
+                };
                 await _roleManager.CreateAsync(role);
+
+                var user = new IdentityUser
+                {
+                    UserName = "defaultPatient",
+                    Email = "default@patient.com"
+                };
+
+                string userPass = "D3f@ultP@t1enT";
+
+                IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
+
+                if (newUser.Succeeded)
+                    await _userManager.AddToRoleAsync(user, "Patient");
             }
         }
 
@@ -94,6 +128,9 @@ namespace FysioAppUX.Controllers
 
                 if (signInResult.Succeeded)
                 {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Contains("Patient"))
+                        return RedirectToAction("PatientHome", "Home");
                     return RedirectToAction("index", "home");
                 }
             }
@@ -150,6 +187,7 @@ namespace FysioAppUX.Controllers
 
                 if (restult.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Patient");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var link = Url.Action(nameof(VerifyEmail), "Account", new { userId = user.Id, code });
                     return ComfirmAccount(link);

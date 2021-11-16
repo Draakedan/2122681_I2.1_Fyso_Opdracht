@@ -9,9 +9,11 @@ namespace DatabaseHandler.Models
     public class Patient
     {
 #nullable enable
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Patient()
         { }
         public Patient(string Name, string PatientNumber, DateTime Birthdate)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.PatientNumber = PatientNumber;
             this.Name = Name;
@@ -24,12 +26,6 @@ namespace DatabaseHandler.Models
         public string EnsuranceCompany { get; set; }
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
-
-        public void Returns(Patient patient)
-        {
-            throw new NotImplementedException();
-        }
-
         public int AdressID { get; set; }
         public Adress Adress { get; set; }
         public string? StudentNumber { get; set; }
@@ -52,6 +48,13 @@ namespace DatabaseHandler.Models
             }
         }
 
+        public string SetGenderString()
+        {
+            if (IsMale)
+                return "Man";
+            else
+                return "Vrouw";
+        }
 
         public override string ToString()
         {
@@ -75,7 +78,7 @@ namespace DatabaseHandler.Models
                 SetAge();
             }
             else
-                throw new InvalidOperationException("Date can't be in the fututre");
+                Age = 0;
         }
     }
 

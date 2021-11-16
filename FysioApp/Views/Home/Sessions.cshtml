@@ -1,0 +1,25 @@
+﻿@model SessionListDatea
+@{
+    ViewData["Title"] = "Behandelingen lijst";
+}
+
+<div class="container">
+    <h4>Afspraken</h4>
+    @if (Model.IsFromSession)
+    {
+        <a class="btn btn-info" href="@Url.Action("NewSessionFromList", "Home", new { dossier = Model.DossierID })">Maak nieuwe afspraak</a>
+    }
+    else
+    {
+        <a class="btn btn-info" href="@Url.Action("NewSession", "Home", new { dossier = Model.DossierID })">Maak nieuwe afspraak</a>
+    }
+    <div class="mt-2 mb-2">
+        @foreach (SessionItemData s in Model.sessions)
+        {
+            <partial name="_SessionListPartial" model="s" />
+        }
+
+    </div>
+
+</div>
+

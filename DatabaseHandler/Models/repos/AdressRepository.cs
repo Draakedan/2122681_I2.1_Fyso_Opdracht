@@ -32,7 +32,10 @@ namespace DatabaseHandler.Models
 
         public Adress Get(int id)
         {
-            return Items[id];
+            foreach (Adress a in Items)
+                if (a.AdressID == id)
+                    return a;
+            return null;
         }
 
         public List<Adress> GetAll()

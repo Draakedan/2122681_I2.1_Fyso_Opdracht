@@ -17,6 +17,10 @@ using Microsoft.AspNetCore.Authorization;
 using FysioAppUX.AuthorizationRequirements;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using FysioAppUX;
 
 namespace FysioAppUX
 {
@@ -35,8 +39,8 @@ namespace FysioAppUX
             services.AddMvcCore()
                 .AddAuthorization();
 
-            try
-            {
+            //try
+            //{
                 services.AddDbContext<FysioIdentityDBContext>(config =>
                 {
                     config.UseSqlServer();
@@ -73,8 +77,8 @@ namespace FysioAppUX
                 });
 
                 services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
-            }
-            catch { }
+            //}
+            //catch { }
 
             //services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<FysioIdentityDBContext>()
@@ -94,8 +98,10 @@ namespace FysioAppUX
             services.AddSingleton<IRepository<FysioWorker>, FysioWorkerRepositroy>();
             services.AddSingleton<IRepository<PatientFile>, PatientFileRepository>();
             services.AddSingleton<IRepository<TherapySession>, TherapySessionRepository>();
+            services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration["GraphQLURI"], new NewtonsoftJsonSerializer()));
+            services.AddScoped<OwnerConsumer>();
             services.AddControllersWithViews();
-            services.AddSingleton<DataReviever>();
+            services.AddSingleton<DataReciever>();
             services.AddSingleton<TotalPatients>();
         }
 

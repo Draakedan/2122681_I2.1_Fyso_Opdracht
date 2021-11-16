@@ -1,0 +1,18 @@
+﻿@model CommentListData
+@{
+    ViewData["Title"] = "Commentaar lijst";
+}
+
+<div class="container">
+    <h4>Commentaar</h4>
+
+    <a class="btn btn-info" href="@Url.Action("NewComment", "Home", new { id = Model.dossierID})">Maak nieuwe comment</a>
+    <div class="mt-2 mb-2">
+        @foreach (Comment s in Model.comments)
+        {
+            <partial name="_CommentListPartial" model="s" />
+        }
+
+    </div>
+
+</div>

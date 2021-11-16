@@ -15,5 +15,10 @@ namespace DatabaseHandler.Models
         public int CommenterID { get; set; }
         public FysioWorker CommentMadeBy { get; set; }
         public bool VisibleToPatient { get; set; }
+
+        public override string ToString()
+        {
+            return $"{CommentText}-{DateMade}-{CommenterID}-{VisibleToPatient}";
+        }
     }
 }

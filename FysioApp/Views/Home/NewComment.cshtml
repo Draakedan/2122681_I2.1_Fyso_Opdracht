@@ -1,0 +1,25 @@
+﻿@model NewCommentData
+@{
+    ViewData["Title"] = "Voeg commentaar toe";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="NewComment" method="post">
+        <input asp-for="DossierID" class="invisible" type="number" />
+
+        <label asp-for="Comment.CommenterID">Wie schrijft het commentaar?</label>
+        <div><span asp-validation-for="Comment.CommenterID" class="text-danger"></span></div>
+        <select class="form-control" asp-for="Comment.CommenterID" asp-items="Model.CommenterStrings">
+        </select>
+
+        <label asp-for="Comment.CommentText">Schrijf commentaar hier:</label>
+        <div><span asp-validation-for="Comment.CommentText" class="text-danger"></span></div>
+        <textarea class="form-control" asp-for="Comment.CommentText"></textarea>
+
+        <label asp-for="Comment.VisibleToPatient">Is het commentaar zichtbaar voor de patient?</label>
+        @Html.RadioButtonFor(m => m.Comment.VisibleToPatient, true) Ja
+        @Html.RadioButtonFor(m => m.Comment.VisibleToPatient, false) Nee
+
+    <button type="submit" class="btn btn-info">Voeg commentaar toe</button>
+    </form>
+</div>

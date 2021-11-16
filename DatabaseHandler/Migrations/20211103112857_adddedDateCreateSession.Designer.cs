@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseHandler.Migrations
 {
     [DbContext(typeof(FysioDataContext))]
-    [Migration("20211019150428_init")]
-    partial class init
+    [Migration("20211103112857_adddedDateCreateSession")]
+    partial class adddedDateCreateSession
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -275,8 +275,10 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPractiseRoom")
@@ -300,8 +302,8 @@ namespace DatabaseHandler.Migrations
                     b.Property<string>("Specials")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

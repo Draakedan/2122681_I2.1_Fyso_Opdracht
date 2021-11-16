@@ -30,7 +30,10 @@ namespace DatabaseHandler.Models
 
         public PatientFile Get(int id)
         {
-            return Items[id];
+            foreach (PatientFile f in Items)
+                if (f.ID == id)
+                    return f;
+            return null;
         }
 
         public List<PatientFile> GetAll()

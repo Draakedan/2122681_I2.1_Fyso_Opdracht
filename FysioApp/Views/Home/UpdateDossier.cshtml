@@ -1,0 +1,30 @@
+﻿@model UpdateDossierData
+@{
+    ViewData["Title"] = "Update dossier";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="UpdateDossier" method="post">
+        <input asp-for="File.ID" class="invisible" type="number" />
+
+        <label asp-for="File.IdmainTherapist">Selecteer hoofdbehandelaar:</label>
+        <div><span asp-validation-for="File.IdmainTherapist" class="text-danger"></span></div>
+        <select asp-for="File.IdmainTherapist" asp-items="Model.Workers" class="form-control"></select>
+
+        <label asp-for="File.fireDate">Selecteer datum onslag:</label>
+        <input asp-for="File.fireDate" class="form-control" type="date" />
+
+        <h5>Voer Nieuw behandelplan in:</h5>
+        <div class="border border-primary m-1 p-1">
+            <label asp-for="Plan.SessionsPerWeek">Voer aantal sessies per week in</label>
+            <div><span asp-validation-for="Plan.SessionsPerWeek" class="text-danger"></span></div>
+            <input asp-for="Plan.SessionsPerWeek" class="form-control" type="number" />
+
+            <label asp-for="Plan.TimePerSession">Voor tijdsduur in uur per sessie in:</label>
+            <div><span asp-validation-for="Plan.TimePerSession" class="text-danger"></span></div>
+            <input asp-for="Plan.TimePerSession" class="form-control" type="number" />
+        </div>
+
+        <button type="submit" class="btn btn-info">Update patient</button>
+    </form>
+</div>

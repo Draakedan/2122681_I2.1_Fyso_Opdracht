@@ -33,7 +33,10 @@ namespace DatabaseHandler.Models
 
         public TherapySession Get(int id)
         {
-            return Items[id];
+            foreach (TherapySession s in Items)
+                if (s.Id == id)
+                    return s;
+            return null;
         }
 
         public List<TherapySession> GetAll()

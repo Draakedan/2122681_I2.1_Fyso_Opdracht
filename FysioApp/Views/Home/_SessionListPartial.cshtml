@@ -1,0 +1,42 @@
+﻿@model SessionItemData
+
+<div class="border border-primary mt-1 p-1">
+    <div class="row">
+        <p class="font-weight-bold col-6">@Model.Session.SessionStartTime.ToShortDateString() @Model.Session.SessionStartTime.ToShortTimeString() - @Model.Session.SessionEndTime.ToShortTimeString()</p>
+        <p class="font-weight-bold col-6">Behandeling door: @Model.Session.SesionDoneBy.Name</p>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <p>@Model.Session.Type</p>
+            <p>@Model.Session.Description</p>
+        </div>
+        <div class="col-6">
+            @if (!Model.IsFromSessionList)
+            {
+                <a class="btn btn-primary" href="@Url.Action("UpdateSession", "Home", new { id = Model.Session.Id })">edit</a>
+            }
+            else
+            {
+                <a class="btn btn-primary" href="@Url.Action("UpdateSessionFromList", "Home", new { id = Model.Session.Id })">edit</a>
+            }
+            @if (Model.IsPatient)
+            {
+                @if (DateTime.Now.Subtract(Model.Session.SessionStartTime).TotalHours < -24)
+                {
+                    <a class="btn btn-danger" href="@Url.Action("DeletePatientSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                }
+            }
+            else
+            {
+                @if (DateTime.Now.Subtract(Model.Session.CreationDate).TotalHours < 24)
+                {
+                    <a class="btn btn-danger" href="@Url.Action("DeleteSession", "Home", new { id = Model.Session.Id })">delete</a>
+                }
+            }
+            @if (!Model.IsFromDossier)
+            {
+                <a class="btn btn-primary" href="@Url.Action("DossierDetails", "Home", new { id = Model.DossierID})">bekijk dossier</a>
+            }
+        </div>
+    </div>
+</div>

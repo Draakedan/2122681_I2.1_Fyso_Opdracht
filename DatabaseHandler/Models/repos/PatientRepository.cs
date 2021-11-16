@@ -19,7 +19,10 @@ namespace DatabaseHandler.Models
 
         public Patient Get(int id)
         {
-            return Items[id];
+            foreach (Patient p in Items)
+                if (p.PatientID == id)
+                    return p;
+            return null;
         }
 
         public int GetSize()

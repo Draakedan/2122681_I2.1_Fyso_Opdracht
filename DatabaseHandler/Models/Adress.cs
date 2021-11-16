@@ -15,5 +15,10 @@ namespace DatabaseHandler.Models
         public string PostalCode { get; set; }
         public string Street { get; set; }
         public string HouseNumber { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Country}-{City}-{PostalCode}-{Street}-{HouseNumber}";
+        }
     }
 }

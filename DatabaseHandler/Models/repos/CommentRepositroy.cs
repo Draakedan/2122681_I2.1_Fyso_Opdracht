@@ -33,7 +33,10 @@ namespace DatabaseHandler.Models
 
         public Comment Get(int id)
         {
-            return Items[id];
+            foreach (Comment c in Items)
+                if (c.CommenterID == id)
+                    return c;
+            return null;
         }
 
         public List<Comment> GetAll()

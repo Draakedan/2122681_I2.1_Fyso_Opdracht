@@ -34,7 +34,10 @@ namespace DatabaseHandler.Models
 
         public FysioWorker Get(int id)
         {
-            return Items[id];
+            foreach (FysioWorker f in Items)
+                if (f.FysioWorkerID == id)
+                    return f;
+            return null;
         }
 
         public List<FysioWorker> GetAll()

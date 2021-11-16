@@ -1,0 +1,47 @@
+﻿@model NewSessionData
+@{
+    ViewData["Title"] = "Voeg behandeling toe";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="NewSession" method="post">
+        <input asp-for="DossierID" class="invisible" type="number" />
+        <input asp-for="IsFromList" class="invisible" type="number" />
+
+        <label asp-for="Session.Type">Selecteer type behandeling:</label>
+        <div><span asp-validation-for="Session.Type" class="text-danger"></span></div>
+        <select class="form-control" asp-for="Session.Type" asp-items="Model.BehandelingStrings">
+            <option value="">Kies Behandeling type...</option>
+        </select>
+
+        <label asp-for="Session.Specials">Indien toelichting verplicht, voer toelichting in:</label>
+        <div><span asp-validation-for="Session.Specials" class="text-danger"></span></div>
+        <textarea asp-for="Session.Specials" class="form-control"></textarea>
+
+        <label asp-for="Session.Description">Voer beschrijving behandeling in:</label>
+        <div><span asp-validation-for="Session.Description" class="text-danger"></span></div>
+        <textarea asp-for="Session.Description" class="form-control"></textarea>
+
+        <label asp-for="Session.SessionDoneByID">Selecteer uitvoerder behandelaar:</label>
+        <div><span asp-validation-for="Session.SessionDoneByID" class="text-danger"></span></div>
+        <select class="form-control" asp-for="Session.SessionDoneByID" asp-items="Model.FysioStrings">
+            <option value="">Kier fysioTherapeut...</option>
+        </select>
+
+        <label asp-for="Session.IsPractiseRoom">Welke soort kamer is nodig?</label>
+        <div><span asp-validation-for="Session.IsPractiseRoom" class="text-danger"></span></div>
+        @Html.RadioButtonFor(m => m.Session.IsPractiseRoom, true) Oefenzaal
+        @Html.RadioButtonFor(m => m.Session.IsPractiseRoom, false) Behandelruimte
+
+        <br />
+
+        <label>Tijdsduur gesprek: @Model.TimeSesssion</label>
+
+        <label asp-for="Session.SessionStartTime">Kies een tijdstip</label>
+        <div><span asp-validation-for="Session.SessionStartTime" class="text-danger"></span></div>
+        <input asp-for="Session.SessionStartTime" class="form-control" type="datetime-local" />
+
+        <button type="submit" class="btn btn-info">Maak behandeling aan</button>
+
+    </form>
+</div>

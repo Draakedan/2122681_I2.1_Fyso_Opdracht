@@ -1,0 +1,5 @@
+﻿@model DatabaseHandler.Models.Comment
+<div class="border border-secondary mt-1 p-1">
+    <p>@Model.CommentText</p>
+    <p class="font-weight-bold">@Model.CommentMadeBy.Name @Model.DateMade.ToShortTimeString()</p>
+</div>

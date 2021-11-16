@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioApp.Tests", "..\FysioA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseHandler", "..\DatabaseHandler\DatabaseHandler.csproj", "{C0B05316-AE52-488D-AA10-92402CD0C2FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VerkisListDatabaseHandler", "..\VerkisListDatabaseHandler\VerkisListDatabaseHandler.csproj", "{C358DF24-12F9-4566-8D82-83658AAB5C3D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C358DF24-12F9-4566-8D82-83658AAB5C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C358DF24-12F9-4566-8D82-83658AAB5C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C358DF24-12F9-4566-8D82-83658AAB5C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C358DF24-12F9-4566-8D82-83658AAB5C3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

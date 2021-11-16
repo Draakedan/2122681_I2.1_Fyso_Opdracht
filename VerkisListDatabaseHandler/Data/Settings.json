@@ -1,5 +1,0 @@
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=DESKTOP-VH9B6RM; Initial Catalog=VerkisListDB; Integrated Security=True; MultipleActiveResultSets=True"
-  }
-}

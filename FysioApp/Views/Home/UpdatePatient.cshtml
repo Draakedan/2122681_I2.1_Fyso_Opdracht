@@ -1,0 +1,42 @@
+﻿@model UpdatePatientData
+@{
+    ViewData["Title"] = "Update patient";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="UpdatePatient" method="post">
+        <input asp-for="DossierID" class="invisible" type="number" />
+
+        <label asp-for="Patient.EnsuranceCompany">Voer verzekering in:</label>
+        <div><span asp-validation-for="Patient.EnsuranceCompany" class="text-danger"></span></div>
+        <input asp-for="Patient.EnsuranceCompany" class="form-control" type="text" />
+
+        <label asp-for="Patient.PhoneNumber">Voer telefoon nummer in:</label>
+        <input asp-for="Patient.PhoneNumber" class="form-control" type="text" />
+
+        <h5>Voer nieuw adress in: </h5>
+        <div class="border border-primary m-1 p-1">
+            <label asp-for="Adress.Country">Voer land in:</label>
+            <div><span asp-validation-for="Adress.Country" class="text-danger"></span></div>
+            <input asp-for="Adress.Country" class="form-control" type="text" />
+
+            <label asp-for="Adress.City">Voer stad in:</label>
+            <div><span asp-validation-for="Adress.City" class="text-danger"></span></div>
+            <input asp-for="Adress.City" class="form-control" type="text" />
+
+            <label asp-for="Adress.PostalCode">Voer postcode in:</label>
+            <div><span asp-validation-for="Adress.PostalCode" class="text-danger"></span></div>
+            <input asp-for="Adress.PostalCode" class="form-control" type="text" />
+
+            <label asp-for="Adress.Street">Voer straat naam in:</label>
+            <div><span asp-validation-for="Adress.Street" class="text-danger"></span></div>
+            <input asp-for="Adress.Street" class="form-control" type="text" />
+
+            <label asp-for="Adress.HouseNumber">Voer huis nummer in:</label>
+            <div><span asp-validation-for="Adress.HouseNumber" class="text-danger"></span></div>
+            <input asp-for="Adress.HouseNumber" class="form-control" type="text" />
+        </div>
+
+        <button type="submit" class="btn btn-info">Update patient</button>
+    </form>
+</div>

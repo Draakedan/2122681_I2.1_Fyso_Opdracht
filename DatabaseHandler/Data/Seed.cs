@@ -226,32 +226,40 @@ namespace DatabaseHandler.Data
         {
             therapySession = new()
             {
-                Type = 1003,
+                Type = "1003",
                 Description = "Tijdens deze sessie wordt er aan de benen gewerkt",
                 IsPractiseRoom = true,
                 SessionDoneByID = worker.FysioWorkerID,
                 SesionDoneBy = worker,
                 SessionStartTime = DateTime.Now.AddDays(10),
-                SessionEndTime = DateTime.Now.AddDays(10).AddHours(1)
+                SessionEndTime = DateTime.Now.AddDays(10).AddHours(1),
+                CreationDate = DateTime.Now
             };
+            context.TherapySessions.Add(therapySession);
 
             therapySession2 = new()
             {
-                Type = 1003,
+                Type = "1003",
                 Description = "We gaan in deze sesie verder aan de benen",
                 IsPractiseRoom = false,
                 SesionDoneBy = student,
                 SessionDoneByID = student.FysioWorkerID,
                 SessionStartTime = DateTime.Now.AddDays(13),
-                SessionEndTime = DateTime.Now.AddDays(13).AddHours(1)
+                SessionEndTime = DateTime.Now.AddDays(13).AddHours(1),
+                CreationDate = DateTime.Now.AddDays(-2)
             };
+            context.TherapySessions.Add(therapySession2);
 
             context.SaveChanges();
-            Task.Delay(1000);
         }
 
         public void SeedPatientFiles()
         {
+            List<TherapySession> sessions = new();
+            foreach (TherapySession ts in context.TherapySessions)
+            {
+                sessions.Add(ts);
+            }
             PatientFile file = new()
             {
                 patientID = patient.PatientID,
@@ -272,19 +280,21 @@ namespace DatabaseHandler.Data
                 comments = new List<Comment> { comment },
                 IdactionPlan = actionPlan.ActionID,
                 actionPlan = actionPlan,
-                sessions = new List<TherapySession>() { therapySession, therapySession2 },
-                sessionIDs = ConvertToString(seedSessionIDs())
+                sessions = sessions,
+                sessionIDs = ConvertToString(seedSessionIDs(sessions))
             };
             context.PatientFiles.Add(file);
 
             context.SaveChanges();
         }
 
-        private List<int> seedSessionIDs()
+        private List<int> seedSessionIDs(List<TherapySession> sessions)
         {
             List<int> ints = new();
-            ints.Add(therapySession.SessionDoneByID);
-            ints.Add(therapySession2.SessionDoneByID);
+            foreach (TherapySession ts in sessions)
+            {
+                ints.Add(ts.Id);
+            }
             return ints;
         }
 

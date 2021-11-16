@@ -1,0 +1,11 @@
+﻿@model DatabaseHandler.Models.PatientFile
+
+<tr>
+    <td>@Model.patient.Name</td>
+    <td>@Model.patient.Age</td>
+    <td>@Model.patient.SetGenderString()</td>
+    <td>@Model.diagnoseCodeComment</td>
+    <td>@Model.mainTherapist.Name</td>
+    <td>@Model.registerDate</td>
+    <td><a href="@Url.Action("DossierDetails", "Home", new { id = Model.ID})">Meer Info</a></td>
+</tr>

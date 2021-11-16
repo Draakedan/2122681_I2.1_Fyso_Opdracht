@@ -19,11 +19,11 @@ namespace FysioApp.Tests
         [Fact]
         public void Index_Should_Return_Index_View()
         {
-            var PatientMock = new Mock<PatientRepository>();
+            var PatientMock = new Mock<DataReciever>();
 
             var sut = new HomeController(PatientMock.Object, null, null);
 
-            PatientMock.Object.GetAll(true, new Patient("Kira", "0123456", new DateTime(1999, 12, 17)));
+            PatientMock.Object.AddPatient(new Patient("Kira", "0123456", new DateTime(1999, 12, 17)));
 
             var result = sut.Index() as ViewResult;
 
@@ -33,7 +33,7 @@ namespace FysioApp.Tests
         [Fact]
         public void New_Patient_Should_Contain_Correct_Age()
         {
-            var PatientMock = new Mock<PatientRepository>();
+            var PatientMock = new Mock<DataReciever>();
 
             var sut = new HomeController(PatientMock.Object, null, null);
 
@@ -48,7 +48,7 @@ namespace FysioApp.Tests
         [Fact]
         public void NewPatient_Should_Return_Error_When_Birthdate_Is_After_Today()
         {
-            var PatientMock = new Mock<PatientRepository>();
+            var PatientMock = new Mock<DataReciever>();
 
             var sut = new HomeController(PatientMock.Object, null, null);
 
@@ -68,7 +68,7 @@ namespace FysioApp.Tests
         [Fact]
         public void NewPatient_Given_Empty_Birthday_Should_Not_Add_Patient()
         {
-            var PatientMock = new Mock<PatientRepository>();
+            var PatientMock = new Mock<DataReciever>();
 
             var sut = new HomeController(PatientMock.Object, null, null);
 
@@ -77,7 +77,7 @@ namespace FysioApp.Tests
             sut.ModelState.AddModelError(nameof(patient.Birthdate), "Birthday should not be empty");
             sut.NewPatient(patient);
 
-            Assert.Empty(PatientMock.Object.GetAll());
+            Assert.Empty(PatientMock.Object.GetAllPatients());
 
         }
 
@@ -154,14 +154,14 @@ namespace FysioApp.Tests
         [Fact]
         public void NewPatient_Given_All_Correct_Inputs_Should_Add_Patient()
         {
-            var PatientMock = new Mock<PatientRepository>();
+            var PatientMock = new Mock<DataReciever>();
 
             var sut = new HomeController(PatientMock.Object, null, null);
 
             Patient patient = new("Kira", "0123456", DateTime.Now.AddYears(-21).AddDays(-3));
             sut.NewPatient(patient);
 
-            Assert.Single(PatientMock.Object.GetAll());
+            Assert.Single(PatientMock.Object.GetAllPatients());
         }
 
     }

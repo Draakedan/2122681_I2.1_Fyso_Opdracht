@@ -33,7 +33,12 @@ namespace DatabaseHandler.Models
 
         public ActionPlan Get(int id)
         {
-            return Items[id];
+            foreach (ActionPlan plan in Items)
+            {
+                if (plan.ActionID == id)
+                    return plan;
+            }
+            return null;
         }
 
         public List<ActionPlan> GetAll()
