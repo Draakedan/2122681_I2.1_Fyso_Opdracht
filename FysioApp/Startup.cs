@@ -83,7 +83,7 @@ namespace FysioAppUX
             services.AddScoped<IFysioWorker, FysioWorkerRepositroy>();
             services.AddScoped<IPatientFile, PatientFileRepository>();
             services.AddScoped<ITherapySession, TherapySessionRepository>();
-            services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration["GraphQLURI"], new NewtonsoftJsonSerializer()));
+            services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration.GetConnectionString("GraphQLURI"), new NewtonsoftJsonSerializer()));
             services.AddScoped<OwnerConsumer>();
             services.AddScoped<IDiagnose, DiagnoseRepository>();
             services.AddScoped<ITreatment, TreatmentRepository>();
