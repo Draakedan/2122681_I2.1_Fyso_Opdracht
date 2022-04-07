@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FysioApp.AuthorizationRequirements
+namespace FysioAppUX.AuthorizationRequirements
 {
     public class CustomRequireClaim : IAuthorizationRequirement
     {

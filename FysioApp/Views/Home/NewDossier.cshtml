@@ -1,0 +1,58 @@
+﻿@model NewDossierData;
+@{
+    ViewData["Title"] = "Maak nieuwe dossier aan";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="NewDossier" method="post">
+        <label asp-for="SelectedPatient">Selecteer patient:</label>
+        <div><span asp-validation-for="SelectedPatient" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedPatient" asp-items="Model.PatientStrings">
+            <option value="">Kies Patient</option>
+        </select>
+
+        <label asp-for="File.IssueDescription"> Globale beschrijving patient:</label>
+        <div><span asp-validation-for="File.IssueDescription" class="text-danger"></span></div>
+        <textarea asp-for="File.IssueDescription" class="form-control"></textarea>
+
+        <label asp-for="SelectedDiagnose">Selecteer Diagnose:</label>
+        <div><span asp-validation-for="SelectedDiagnose" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedDiagnose" asp-items="Model.DiagnoseList">
+            <option value="">Kies Diagnose</option>
+        </select>
+
+        <label asp-for="SelectedIntaker">Intake gedaan door:</label>
+        <div><span asp-validation-for="SelectedIntaker" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedIntaker" asp-items="Model.AllWorkers">
+            <option value="">Kies Fysiotherapist of Student</option>
+        </select>
+
+        <label asp-for="SelectedSupperviser">intake onder toezicht van:</label>
+        <div><span asp-validation-for="SelectedSupperviser" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedSupperviser" asp-items="Model.FysioStrings">
+            <option value="">Kies Fysiotherapist</option>
+        </select>
+
+        <label asp-for="SelectedMain">Hoofdbehandelaar:</label>
+        <div><span asp-validation-for="SelectedMain" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedMain" asp-items="Model.AllWorkers">
+            <option value="">Kies Fysiotherapeut of student</option>
+        </select>
+
+        <label asp-for="File.RegisterDate">Datum Registratie:</label>
+        <div><span asp-validation-for="File.RegisterDate" class="text-danger"></span></div>
+        <input asp-for="File.RegisterDate" class="form-control" type="date" />
+
+        <label asp-for="File.FireDate">Datum ontslag:</label>
+        <div><span asp-validation-for="File.FireDate" class="text-danger"></span></div>
+        <input asp-for="File.FireDate" class="form-control" type="date" />
+
+        <label asp-for="SelectedPlan">Selecteer behandelplan:</label>
+        <div><span asp-validation-for="SelectedPlan" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedPlan" asp-items="Model.PlanStrings">
+            <option value="">Kies behandelplan</option>
+        </select>
+
+        <button type="submit" class="btn btn-info">Voeg toe</button>
+    </form>
+</div>

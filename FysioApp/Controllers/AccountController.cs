@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FysioApp.Controllers
+namespace FysioAppUX.Controllers
 {
     public class AccountController : Controller
     {
@@ -31,7 +31,7 @@ namespace FysioApp.Controllers
         {
             if (Url.IsLocalUrl(ReturnUrl))
             {
-                string[] routes = ReturnUrl.ToLower().Split("/", StringSplitOptions.RemoveEmptyEntries);
+                _ = ReturnUrl.ToLower().Split("/", StringSplitOptions.RemoveEmptyEntries);
                 return RedirectToAction(ReturnUrl);
             }
             else
@@ -43,15 +43,19 @@ namespace FysioApp.Controllers
             bool x = await _roleManager.RoleExistsAsync("PhysicalTherapist");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "PhysicalTherapist";
+                var role = new IdentityRole
+                {
+                    Name = "PhysicalTherapist"
+                };
                 await _roleManager.CreateAsync(role);
 
-                var user = new IdentityUser();
-                user.UserName = "default";
-                user.Email = "default@default.com";
+                var user = new IdentityUser
+                {
+                    UserName = "defaultTherapist",
+                    Email = "default@therapist.com"
+                };
 
-                string userPass = "S0mep@ssW0rd";
+                string userPass = "D3f@ultTheR@p1st";
 
                 IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
 
@@ -62,17 +66,47 @@ namespace FysioApp.Controllers
             x = await _roleManager.RoleExistsAsync("Intern");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "Intern";
+                var role = new IdentityRole
+                {
+                    Name = "Intern"
+                };
                 await _roleManager.CreateAsync(role);
+
+                var user = new IdentityUser
+                {
+                    UserName = "defaultStudent",
+                    Email = "default@student.com"
+                };
+
+                string userPass = "D3f@ultSt0d3nT";
+
+                IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
+
+                if (newUser.Succeeded)
+                    await _userManager.AddToRoleAsync(user, "Intern");
             }
 
             x = await _roleManager.RoleExistsAsync("Patient");
             if (!x)
             {
-                var role = new IdentityRole();
-                role.Name = "Patient";
+                var role = new IdentityRole
+                {
+                    Name = "Patient"
+                };
                 await _roleManager.CreateAsync(role);
+
+                var user = new IdentityUser
+                {
+                    UserName = "defaultPatient",
+                    Email = "default@patient.com"
+                };
+
+                string userPass = "D3f@ultP@t1enT";
+
+                IdentityResult newUser = await _userManager.CreateAsync(user, userPass);
+
+                if (newUser.Succeeded)
+                    await _userManager.AddToRoleAsync(user, "Patient");
             }
         }
 
@@ -90,10 +124,15 @@ namespace FysioApp.Controllers
             if (user != null)
             {
                 //sign in
-              var signInResult =  await _signInManager.PasswordSignInAsync(user, password, false, false);
+                var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
                 if (signInResult.Succeeded)
                 {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Contains("Patient"))
+                        return RedirectToAction("PatientHome", "Home");
+                    else if (roles.Contains("PhysicalTherapist"))
+                        return RedirectToAction("FysioHome", "Home");
                     return RedirectToAction("index", "home");
                 }
             }
@@ -138,6 +177,26 @@ namespace FysioApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string username, string email, string password, string comfirmPass)
         {
+            if (password.Any(ch => !Char.IsDigit(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a digit");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsNumber(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a number");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsSymbol(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a symbol");
+                return View();
+            }
+            if (password.Length >= 8)
+            {
+                ModelState.AddModelError("Password", "passwords must be at least 8 characters");
+                return View();
+            }
             if (password == comfirmPass)
             {
                 var user = new IdentityUser
@@ -150,6 +209,7 @@ namespace FysioApp.Controllers
 
                 if (restult.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Patient");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var link = Url.Action(nameof(VerifyEmail), "Account", new { userId = user.Id, code });
                     return ComfirmAccount(link);
@@ -157,7 +217,7 @@ namespace FysioApp.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(password),"passwords don't match");
+                ModelState.AddModelError("Password", "passwords don't match");
                 return View();
             }
 

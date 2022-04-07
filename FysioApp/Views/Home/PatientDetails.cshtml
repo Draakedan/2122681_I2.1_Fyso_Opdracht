@@ -1,10 +1,10 @@
-﻿@model FysioApp.Models.Patient
+﻿@model DomainModels.Models.Patient
 @{
     ViewData["Title"] = $"{Model.PatientNumber} info";
 }
 
 <h4>info van patient nr @Model.PatientNumber (@Model.Name)</h4>
 <p>Geboortedatum: @Model.Birthdate</p>
-<p>LeeftijdL @Model.Age</p>
-@*<p>Datum van registratie: @Model.RegisterDate</p>
-<p>Datum voor onstalg: @Model.FireDate</p>*@
+<p>Leeftijd: @Model.Age</p>
+<p>stad: @Model.Adress.City</p>
+<p>Land: @Model.Adress.Country</p>
