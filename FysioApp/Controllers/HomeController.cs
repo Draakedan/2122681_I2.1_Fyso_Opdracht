@@ -1078,7 +1078,7 @@ namespace FysioAppUX.Controllers
             return View(data);
         }
 
-        [Authorize(Roles = "PhysicalTherapist")]
+        [Authorize(Roles = "PhysicalTherapist, Intern")]
         [HttpGet]
         public IActionResult FysioHome()
         {
