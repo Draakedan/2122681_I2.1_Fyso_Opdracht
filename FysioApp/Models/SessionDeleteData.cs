@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseHandler.Models;
+using DomainModels.Models;
 
 namespace FysioAppUX.Models
 {

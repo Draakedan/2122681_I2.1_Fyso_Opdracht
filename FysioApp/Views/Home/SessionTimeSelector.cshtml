@@ -1,0 +1,58 @@
+﻿@model TimeTableData
+
+<p>@Model.FysioAvailability</p>
+<h3>bezette tijden fysio</h3>
+@if (Model.FysioSessions.Count == 0)
+{
+    <p>er zijn geen bezette tijden voor @Model.FysioName</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr><th>dag</th><th>begin tijd</th><th>eindtijd</th></tr>
+        </thead>
+        <tbody>
+            @foreach (TherapySession s in Model.FysioSessions)
+            {
+                <partial name="_SessionTablePartial" model="@s" />
+            }
+        </tbody>
+    </table>
+}
+
+<p> er mogen maximaal @Model.ActionPlan.SessionsPerWeek sessies van @Model.ActionPlan.TimePerSession uur in een week gepland worden</p>
+
+<h3>Reeds geplande sessies</h3>
+@if (Model.PatientSessions.Count == 0)
+{
+    <p>Er zijn geen reeds geplande sessies</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr><th>dag</th><th>begin tijd</th><th>eindtijd</th></tr>
+        </thead>
+        <tbody>
+            @foreach (TherapySession s in Model.PatientSessions)
+            {
+                <partial name="_SessionTablePartial" model="@s" />
+            }
+        </tbody>
+    </table>
+}
+
+<form class="form-group" asp-action="SessionTimeSelector" method="post">
+    <input asp-for="IsUpdate" class="invisible" type="number" />
+    <input asp-for="IsFromList" class="invisible" type="number" />
+    <input asp-for="FysioId" class="invisible" type="number" />
+    <input asp-for="File.ID" class="invisible" type="number" />
+    <input asp-for="TherapySession.Id" class="invisible" type="number" />
+
+    <label asp-for="TherapySession.SessionStartTime">Kies een tijdstip</label>
+    <div><span asp-validation-for="TherapySession.SessionStartTime" class="text-danger"></span></div>
+    <input asp-for="TherapySession.SessionStartTime" class="form-control" type="datetime-local" />
+
+    <button type="submit" class="btn btn-info">afronden</button>
+</form>

@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DatabaseHandler.Models;
-
+﻿using DatabaseHandler.Models;
+using DomainModels.Models;
 
 namespace DatabaseHandler.Data
 {
     public class DataLoader
     {
-        public DataLoader()
+        public DataLoader(FysioDataContext context)
         {
-            using FysioDataContext context = new();
-            var ActionPlans = new ActionPlanRepository();
+            var ActionPlans = new ActionPlanRepository(context);
             foreach (ActionPlan a in context.ActionPlans)
-            {
-                ActionPlans.Add(a);
-            }
+                ActionPlans.AddActionPlan(a);
         }
     }
 }

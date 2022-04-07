@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DatabaseHandler.Models;
+using DomainModels.Models;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Reflection;
@@ -21,29 +17,7 @@ namespace DatabaseHandler.Data
         public DbSet<PatientFile> PatientFiles { get; set; }
         public DbSet<TherapySession> TherapySessions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            try
-            {
-                optionsBuilder.UseSqlServer(GetConnectionStringFromJson());
-            }
-            catch { 
-            }
-        }
-
-        private static string GetConnectionStringFromJson()
-        {
-            try
-            {
-                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"data/Settings.json");
-                using StreamReader r = new(path);
-                String json = r.ReadToEnd();
-                string res = (string)JObject.Parse(json)["ConnectionStrings"]["DefaultConnection"];
-                return res;
-            }
-            catch {
-                return null;
-            }
-        }
+        public FysioDataContext(DbContextOptions<FysioDataContext> contextOptions) : base(contextOptions)
+        { }
     }
 }

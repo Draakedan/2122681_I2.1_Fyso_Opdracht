@@ -4,21 +4,47 @@ using Microsoft.AspNetCore.Mvc;
 using DatabaseHandler.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using DomainServices.Repos;
+using FysioAppUX.Data;
+using DomainModels.Models;
 
 namespace FysioAppUX.Components
 {
     public class TotalPatients : ViewComponent
     {
-        readonly IRepository<Patient> _repository;
+        private readonly ITherapySession _therapySession;
+        private readonly IFysioWorker _fysioWorker;
+        private readonly List<TherapySession> Sessions;
+        private readonly FysioIdentityDBContext _context;
 
-        public TotalPatients(IRepository<Patient> repository)
+        public TotalPatients(IFysioWorker worker, ITherapySession session, FysioIdentityDBContext context)
         {
-            _repository = repository;
+            _therapySession = session;
+            _fysioWorker = worker;
+            _context = context;
+            Sessions = new();
         }
 
         public string Invoke()
         {
-            return $"Total Patients: {_repository.GetAll().Count}";
+            FysioWorker fysioUser = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.Identity.Name;
+                string email = _context.GetUserEmail(userId);
+                if (User.IsInRole("PhysicalTherapist") || User.IsInRole("Intern"))
+                {
+                    fysioUser = _fysioWorker.GetFysioWorkerByEmail(email);
+                    foreach (TherapySession session in _therapySession.GetTherapySessionsByFysio(fysioUser.FysioWorkerID))
+                    {
+                        if (session.SessionStartTime.Date == DateTime.Now.Date)
+                            Sessions.Add(session);
+                    }
+                }
+            }
+            if (fysioUser == null)
+                return "";
+            return $"Aantal sessies vandaag: {Sessions.Count}";
         }
     }
 }

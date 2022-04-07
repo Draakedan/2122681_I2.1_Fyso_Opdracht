@@ -14,7 +14,7 @@
         <a class="btn btn-info" href="@Url.Action("NewSession", "Home", new { dossier = Model.DossierID })">Maak nieuwe afspraak</a>
     }
     <div class="mt-2 mb-2">
-        @foreach (SessionItemData s in Model.sessions)
+        @foreach (SessionItemData s in Model.Sessions)
         {
             <partial name="_SessionListPartial" model="s" />
         }

@@ -30,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseHandler\DatabaseHandler.csproj" />
+    <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+    <ProjectReference Include="..\DomainServices\DomainServices.csproj" />
     <ProjectReference Include="..\FysioApp\FysioAppUX.csproj" />
   </ItemGroup>
 

@@ -1,65 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DomainModels.Models;
+using DomainServices.Repos;
+using DatabaseHandler.Data;
 
 namespace DatabaseHandler.Models
 {
-    public class PatientRepository : IRepository<Patient>
+    public class PatientRepository : IPatient
     {
-        public List<Patient> Items { get; init; }
+        private readonly FysioDataContext Context;
+        public PatientRepository(FysioDataContext context) => Context = context;
 
-        public PatientRepository() => Items = new List<Patient>();
-
-        public void Add(Patient patient) 
+        public void AddPatient(Patient patient)
         {
-            patient.Index = GetSize();
-            Items.Add(patient);
+            Context.Patients.Add(patient);
+            Context.SaveChanges();
         }
 
-        public Patient Get(int id)
+        public bool PatientExists(int id) => GetPatientByID(id) != null;
+
+        public List<Patient> GetAllPatients()
         {
-            foreach (Patient p in Items)
+            List<Patient> patientList = new();
+            foreach (Patient p in Context.Patients)
+            {
+                p.Adress = new AdressRepository(Context).GetAdressByID(p.AdressID);
+                patientList.Add(p);
+            }
+            return patientList;
+        }
+
+        public Patient GetPatientByID(int id)
+        {
+            foreach (Patient p in Context.Patients)
                 if (p.PatientID == id)
+                {
+                    p.Adress = new AdressRepository(Context).GetAdressByID(p.AdressID);
                     return p;
+                }
             return null;
         }
 
-        public int GetSize()
+        public Patient GetPatientByEmail(string email)
         {
-            return Items.Count;
-        }
-
-        public bool Exists(int id)
-        {
-            try
-            {
-                return Items.Contains(Items[id]);
-            }
-            catch 
-            {
-                return false;
-            }
-        }
-
-        public List<Patient> GetAll() 
-        {
-            return Items;
-        }
-
-        public List<Patient> GetAll(bool isTest, Patient patient)
-        {
-            if (isTest)
-                Items.Add(patient);
-            return GetAll();
-        }
-
-        public Patient GetItemByID(int id)
-        {
-            foreach (Patient p in Items)
-                if (p.PatientID == id)
+            if (email == "default@patient.com")
+                foreach (Patient p in Context.Patients)
                     return p;
+            foreach (Patient p in Context.Patients)
+                if (p.Email == email)
+                {
+                    p.Adress = new AdressRepository(Context).GetAdressByID(p.AdressID);
+                    return p;
+                }
             return null;
+        }
+
+        public void UpdatePatient(Patient patient)
+        {
+            Context.Patients.Update(patient);
+            Context.SaveChanges();
         }
     }
 }

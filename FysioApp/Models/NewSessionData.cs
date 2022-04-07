@@ -1,4 +1,5 @@
-﻿using DatabaseHandler.Models;
+﻿using DomainModels.Models;
+using DomainServices.Repos;
 using FysioAppUX.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -11,40 +12,34 @@ namespace FysioAppUX.Models
     public class NewSessionData
     {
         public int DossierID { get; set; }
-        public List<Behandeling> Behandelings { get; set; }
+        public List<Treatment> Behandelings { get; set; }
         public IEnumerable<SelectListItem> BehandelingStrings { get; set; }
         public IEnumerable<SelectListItem> FysioStrings { get; set; }
         public IEnumerable<SelectListItem> PatientStrings { get; set; }
         public TherapySession Session { get; set; }
-        public FysioWorker Worker{ get; set; }
+        public FysioWorker Worker { get; set; }
         public int TimeSesssion { get; set; }
         public int PatientID { get; set; }
         public int IsFromList { get; set; }
+        private readonly ITreatment Treatment;
 
-        public NewSessionData(DataReciever reciever, int dossierID)
+        public NewSessionData(ITreatment treatment, IPatientFile patientFile, FysioWorker worker)
         {
-            DossierID = dossierID;
-            Behandelings = new();
-            Session = new();
-            SetFysioStrings(reciever);
-            TimeSesssion = reciever.GetOnePatientFile(dossierID).actionPlan.TimePerSession;
-        }
-
-        public NewSessionData(DataReciever reciever, FysioWorker worker)
-        {
+            Treatment = treatment;
             Worker = worker;
             Behandelings = new();
             Session = new();
-            SetPatientStrings(reciever);
+            SetPatientStrings(patientFile);
         }
 
-        public NewSessionData(DataReciever reciever, int dossierID, TherapySession session)
+        public NewSessionData(ITreatment treatment, IFysioWorker fysioWorker, IPatientFile patientFile, int dossierID, TherapySession session)
         {
+            Treatment = treatment;
             DossierID = dossierID;
             Behandelings = new();
-            Session = session;
-            SetFysioStrings(reciever);
-            TimeSesssion = reciever.GetOnePatientFile(dossierID).actionPlan.TimePerSession;
+            Session = session ?? new();
+            SetFysioStrings(fysioWorker, patientFile);
+            TimeSesssion = patientFile.GetPatientFileByID(dossierID).ActionPlan.TimePerSession;
             SetSelectedFysio();
         }
 
@@ -63,27 +58,27 @@ namespace FysioAppUX.Models
             }
         }
 
-        private List<Patient> GetPatients(DataReciever reciever)
+        private List<Patient> GetPatients(IPatientFile patientFile)
         {
             List<Patient> patients = new();
-            foreach (PatientFile p in reciever.GetAllPatientFiles())
+            foreach (PatientFile p in patientFile.GetAllPatientFiles())
             {
-                if (p.mainTherapist.FysioWorkerID == Worker.FysioWorkerID)
-                    patients.Add(p.patient);
+                if (p.MainTherapist.FysioWorkerID == Worker.FysioWorkerID)
+                    patients.Add(p.Patient);
                 else if (Worker.IsStudent)
                 {
-                    if (!p.isStudent)
-                        patients.Add(p.patient);
+                    if (!p.IsStudent)
+                        patients.Add(p.Patient);
                 }
             }
             return patients;
         }
 
-        private void SetPatientStrings(DataReciever reciever)
+        private void SetPatientStrings(IPatientFile patientFile)
         {
             List<SelectListItem> sList = new();
-            SelectListItem sli = new();
-            foreach (Patient p in GetPatients(reciever))
+            SelectListItem sli;
+            foreach (Patient p in GetPatients(patientFile))
             {
                 sli = new(
                     $"{p.Name}",
@@ -94,28 +89,28 @@ namespace FysioAppUX.Models
             PatientStrings = sList;
         }
 
-        private List<FysioWorker> GetFysioWorkers(DataReciever reciever)
+        private List<FysioWorker> GetFysioWorkers(IFysioWorker fysioWorker, IPatientFile patientFile)
         {
             List<FysioWorker> workers = new();
-            PatientFile patientFile = reciever.GetOnePatientFile(DossierID);
-            workers.Add(patientFile.mainTherapist);
-            if (!patientFile.mainTherapist.IsStudent)
+            PatientFile file = patientFile.GetPatientFileByID(DossierID);
+            workers.Add(file.MainTherapist);
+            if (!file.MainTherapist.IsStudent)
             {
-                foreach (FysioWorker worker in reciever.GetAllFysioWorkers())
+                foreach (FysioWorker worker in fysioWorker.GetAllFysioWorkers())
                     if (worker.IsStudent)
                         workers.Add(worker);
             }
             return workers;
         }
 
-        private void SetFysioStrings(DataReciever reciever)
+        private void SetFysioStrings(IFysioWorker fysioWorker, IPatientFile patientFile)
         {
             List<SelectListItem> sList = new();
-            SelectListItem sli = new();
-            foreach (FysioWorker w in GetFysioWorkers(reciever))
+            SelectListItem sli;
+            foreach (FysioWorker w in GetFysioWorkers(fysioWorker, patientFile))
             {
                 sli = new(
-                    $"{w.FysioWorkerID} - {w.Name}",
+                    $"{w.FysioWorkerID} - {w.Name} {GetFysioStudentString(w)}",
                     w.FysioWorkerID.ToString()
                     );
                 sList.Add(sli);
@@ -123,10 +118,17 @@ namespace FysioAppUX.Models
             FysioStrings = sList;
         }
 
-        public async Task FillBehandelings()
+        private static string GetFysioStudentString(FysioWorker w)
         {
-            Behandelings = await APIReader.ProcessAllBehandelingen();
-            createBehandelingList();
+            if (w.IsStudent)
+                return "(student)";
+            else return "(Fysio)";
+        }
+
+        public void FillBehandelings()
+        {
+            Behandelings = Treatment.GetAllTreatments();
+            CreateBehandelingList();
         }
 
         public void SetSelectedBehandeling()
@@ -140,15 +142,15 @@ namespace FysioAppUX.Models
                     }
         }
 
-        private void createBehandelingList()
+        private void CreateBehandelingList()
         {
             List<SelectListItem> dList = new();
             SelectListItem sli;
-            foreach (Behandeling b in Behandelings)
+            foreach (Treatment b in Behandelings)
             {
                 sli = new(
-                    $"{b.Waarde} - {b.Omschrijving}, Toelichting verplicht: {b.Toelichting_verplicht}",
-                    b.Waarde
+                    $"{b.waarde} - {b.omschrijving}, Toelichting verplicht: {b.toelichting_verplicht}",
+                    b.waarde
                     );
                 dList.Add(sli);
             }

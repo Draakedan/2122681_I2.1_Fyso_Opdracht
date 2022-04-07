@@ -20,7 +20,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
+using DomainModels.Models;
 using FysioAppUX;
+using DomainServices.Repos;
+using InfrastructureAPIHandler.Data;
+using DatabaseHandler.Data;
 
 namespace FysioAppUX
 {
@@ -28,84 +32,65 @@ namespace FysioAppUX
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration; 
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
                 .AddAuthorization();
 
-            //try
-            //{
-                services.AddDbContext<FysioIdentityDBContext>(config =>
+            services.AddDbContext<FysioIdentityDBContext>(config => config.UseSqlServer(Configuration.GetConnectionString("IdentityDB")));
+
+            services.AddDbContext<FysioDataContext>(config => config.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+            })
+                .AddEntityFrameworkStores<FysioIdentityDBContext>()
+                .AddRoles<IdentityRole>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Identity.Cookie";
+                config.LoginPath = "/Account/Login";
+            });
+
+            services.AddAuthorization(config =>
+            {
+                AuthorizationPolicyBuilder defaultAuthBuilder = new();
+                var defaultAuthPolicy = defaultAuthBuilder
+                .RequireAuthenticatedUser()
+                .RequireClaim(ClaimTypes.DateOfBirth)
+                .Build();
+
+                config.AddPolicy("admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+                config.AddPolicy("Claim.DoB", policyBuilder =>
                 {
-                    config.UseSqlServer();
+                    policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
                 });
+            });
 
-                services.AddIdentity<IdentityUser, IdentityRole>(config =>
-                {
-                    //config.SignIn.RequireConfirmedEmail = true;
-                })
-                    .AddEntityFrameworkStores<FysioIdentityDBContext>()
-                    .AddRoles<IdentityRole>()
-                    .AddDefaultTokenProviders();
+            services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
 
-                services.ConfigureApplicationCookie(config =>
-                {
-                    config.Cookie.Name = "Identity.Cookie";
-                    config.LoginPath = "/Account/Login";
-                });
-
-                services.AddAuthorization(config =>
-                {
-                    AuthorizationPolicyBuilder defaultAuthBuilder = new AuthorizationPolicyBuilder();
-                    var defaultAuthPolicy = defaultAuthBuilder
-                    .RequireAuthenticatedUser()
-                    .RequireClaim(ClaimTypes.DateOfBirth)
-                    .Build();
-
-                    config.AddPolicy("admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
-                    //config.AddPolicy("PhysicalTherapist")
-                    config.AddPolicy("Claim.DoB", policyBuilder =>
-                        {
-                            policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
-                        });
-                });
-
-                services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
-            //}
-            //catch { }
-
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<FysioIdentityDBContext>()
-            //    .AddDefaultTokenProviders();
-
-
-            //services.AddAuthentication("PhysicalTherapistAuth")
-            //    .AddCookie("PhysicalTherapistAuth", config =>
-            //    {
-            //        config.Cookie.Name = "PhysicalTherpaist";
-            //    });
-
-            services.AddSingleton<IRepository<Patient>, PatientRepository>();
-            services.AddSingleton<IRepository<ActionPlan>, ActionPlanRepository>();
-            services.AddSingleton<IRepository<Adress>, AdressRepository>();
-            services.AddSingleton<IRepository<Comment>, CommentRepositroy>();
-            services.AddSingleton<IRepository<FysioWorker>, FysioWorkerRepositroy>();
-            services.AddSingleton<IRepository<PatientFile>, PatientFileRepository>();
-            services.AddSingleton<IRepository<TherapySession>, TherapySessionRepository>();
+            services.AddScoped<IPatient, PatientRepository>();
+            services.AddScoped<IActionPlan, ActionPlanRepository>();
+            services.AddScoped<IAdress, AdressRepository>();
+            services.AddScoped<IComment, CommentRepositroy>();
+            services.AddScoped<IFysioWorker, FysioWorkerRepositroy>();
+            services.AddScoped<IPatientFile, PatientFileRepository>();
+            services.AddScoped<ITherapySession, TherapySessionRepository>();
             services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration["GraphQLURI"], new NewtonsoftJsonSerializer()));
             services.AddScoped<OwnerConsumer>();
+            services.AddScoped<IDiagnose, DiagnoseRepository>();
+            services.AddScoped<ITreatment, TreatmentRepository>();
             services.AddControllersWithViews();
-            services.AddSingleton<DataReciever>();
-            services.AddSingleton<TotalPatients>();
+            services.AddScoped<TotalPatients>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -115,7 +100,6 @@ namespace FysioAppUX
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

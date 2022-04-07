@@ -4,24 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using DatabaseHandler.Models;
+using DomainModels.Models;
 
 namespace DatabaseHandler.Data
 {
     class Seed
     {
-        FysioDataContext context = new();
-        ActionPlan actionPlan;
-        Adress adress;
-        FysioWorker worker;
-        FysioWorker student;
-        Comment comment;
-        Patient patient;
-        TherapySession therapySession;
-        TherapySession therapySession2;
+        private readonly FysioDataContext Context;
+        private ActionPlan ActionPlan;
+        private Adress Adress;
+        private FysioWorker Worker;
+        private FysioWorker Student;
+        private Comment Comment;
+        private Patient Patient;
+        private TherapySession TherapySession;
+        private TherapySession TherapySession2;
 
-        public Seed()
+        public Seed(FysioDataContext context)
         {
+            Context = context;
             SeedActionPlan();
             SeedAddresses();
             SeedFysioWorkers();
@@ -33,34 +34,33 @@ namespace DatabaseHandler.Data
 
         private void SeedActionPlan()
         {
-            actionPlan = new()
+            ActionPlan = new()
             {
                 SessionsPerWeek = 3,
                 TimePerSession = 2
             };
-            context.ActionPlans.Add(actionPlan);
+            Context.ActionPlans.Add(ActionPlan);
 
-            ActionPlan actionPlan2 = new ActionPlan()
+            ActionPlan actionPlan2 = new()
             {
                 SessionsPerWeek = 1,
                 TimePerSession = 2
             };
-            context.ActionPlans.Add(actionPlan2);
+            Context.ActionPlans.Add(actionPlan2);
 
             ActionPlan actionPlan3 = new()
             {
                 SessionsPerWeek = 3,
                 TimePerSession = 1
             };
-            context.ActionPlans.Add(actionPlan3);
+            Context.ActionPlans.Add(actionPlan3);
 
-            context.SaveChanges();
-
+            Context.SaveChanges();
         }
 
         public void SeedAddresses()
         {
-            adress = new()
+            Adress = new()
             {
                 Country = "Nederland",
                 City = "Breda",
@@ -68,7 +68,7 @@ namespace DatabaseHandler.Data
                 Street = "Lovensdijkstraat",
                 HouseNumber = "61"
             };
-            context.Adresses.Add(adress);
+            Context.Adresses.Add(Adress);
 
             Adress adress1 = new()
             {
@@ -78,7 +78,7 @@ namespace DatabaseHandler.Data
                 Street = "Hogeschoollaan",
                 HouseNumber = "1"
             };
-            context.Adresses.Add(adress1);
+            Context.Adresses.Add(adress1);
 
             Adress adress2 = new()
             {
@@ -88,39 +88,39 @@ namespace DatabaseHandler.Data
                 Street = "Mill Hillplein",
                 HouseNumber = "1"
             };
-            context.Adresses.Add(adress2);
+            Context.Adresses.Add(adress2);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void SeedComments()
         {
-            comment = new()
+            Comment = new()
             {
                 CommentText = "Knie is opgezwollen maar kan nog wel staan een lopen, echter is dit geen goed idee, omdat de knie moet rusten.",
                 DateMade = DateTime.Today,
-                CommenterID = student.FysioWorkerID,
-                CommentMadeBy = student,
+                CommenterID = Student.FysioWorkerID,
+                CommentMadeBy = Student,
                 VisibleToPatient = true
             };
-            context.Comments.Add(comment);
+            Context.Comments.Add(Comment);
 
             Comment comment2 = new()
             {
                 CommentText = "What doet deze man rondlopen met een gezwollen en waarschijnlijk ontstoken knie",
                 DateMade = DateTime.Today.AddDays(3),
-                CommentMadeBy = worker,
-                CommenterID = worker.FysioWorkerID,
+                CommentMadeBy = Worker,
+                CommenterID = Worker.FysioWorkerID,
                 VisibleToPatient = false
             };
-            context.Comments.Add(comment2);
+            Context.Comments.Add(comment2);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void SeedFysioWorkers()
         {
-            worker = new()
+            Worker = new()
             {
                 Name = "Rudolf",
                 Email = "IAmNotThatRudolf@RedNose.com",
@@ -129,7 +129,7 @@ namespace DatabaseHandler.Data
                 BIGNumber = "0012345678",
                 IsStudent = false
             };
-            context.FysioWorkers.Add(worker);
+            Context.FysioWorkers.Add(Worker);
 
             FysioWorker worker2 = new()
             {
@@ -140,9 +140,9 @@ namespace DatabaseHandler.Data
                 BIGNumber = "1234567890",
                 IsStudent = false
             };
-            context.FysioWorkers.Add(worker2);
+            Context.FysioWorkers.Add(worker2);
 
-            student = new()
+            Student = new()
             {
                 Name = "Pino",
                 Email = "Pinoccio@RealBoi.com",
@@ -151,7 +151,7 @@ namespace DatabaseHandler.Data
                 IsStudent = true
 
             };
-            context.FysioWorkers.Add(student);
+            Context.FysioWorkers.Add(Student);
 
             FysioWorker student2 = new()
             {
@@ -161,29 +161,29 @@ namespace DatabaseHandler.Data
                 StudentNumber = "458979756",
                 IsStudent = true
             };
-            context.FysioWorkers.Add(student2);
+            Context.FysioWorkers.Add(student2);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void SeedPatients()
         {
-            patient = new()
+            Patient = new()
             {
                 EnsuranceCompany = "Insured",
                 Email = "Ahmekie@avans.nl",
                 PhoneNumber = "+310606060606",
                 StudentNumber = "2122693",
                 Name = "Ahfieds",
-                AdressID = adress.AdressID,
-                Adress = adress,
+                AdressID = Adress.AdressID,
+                Adress = Adress,
                 PatientNumber = "000555333111",
                 IsMale = true,
                 Age = 19,
                 Birthdate = DateTime.Now.AddYears(-19).AddDays(-5).AddMonths(-3),
                 IsStudent = true
             };
-            context.Patients.Add(patient);
+            Context.Patients.Add(Patient);
 
             Patient patient2 = new()
             {
@@ -191,8 +191,8 @@ namespace DatabaseHandler.Data
                 Email = "Hvoedts@avans.nl",
                 PhoneNumber = "+31454647657",
                 StudentNumber = "1234567123",
-                Adress = adress,
-                AdressID = adress.AdressID,
+                Adress = Adress,
+                AdressID = Adress.AdressID,
                 Name = "Helga",
                 PatientNumber = "34357657564",
                 IsMale = false,
@@ -200,7 +200,7 @@ namespace DatabaseHandler.Data
                 Birthdate = DateTime.Now.AddYears(-22).AddDays(-20).AddMonths(-1),
                 IsStudent = true
             };
-            context.Patients.Add(patient2);
+            Context.Patients.Add(patient2);
 
             Patient patient3 = new()
             {
@@ -208,8 +208,8 @@ namespace DatabaseHandler.Data
                 Email = "Rugdeklac@avans.nl",
                 PhoneNumber = "+315454767658",
                 WorkerNumber = "4654676487845",
-                Adress = adress,
-                AdressID = adress.AdressID,
+                Adress = Adress,
+                AdressID = Adress.AdressID,
                 Name = "Renie",
                 PatientNumber = "3214334567",
                 IsMale = true,
@@ -217,78 +217,78 @@ namespace DatabaseHandler.Data
                 Birthdate = DateTime.Now.AddYears(-45).AddDays(-17).AddMonths(-6),
                 IsStudent = false
             };
-            context.Patients.Add(patient3);
+            Context.Patients.Add(patient3);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void SeedTherapySessions()
         {
-            therapySession = new()
+            TherapySession = new()
             {
                 Type = "1003",
                 Description = "Tijdens deze sessie wordt er aan de benen gewerkt",
                 IsPractiseRoom = true,
-                SessionDoneByID = worker.FysioWorkerID,
-                SesionDoneBy = worker,
+                SessionDoneByID = Worker.FysioWorkerID,
+                SesionDoneBy = Worker,
                 SessionStartTime = DateTime.Now.AddDays(10),
                 SessionEndTime = DateTime.Now.AddDays(10).AddHours(1),
                 CreationDate = DateTime.Now
             };
-            context.TherapySessions.Add(therapySession);
+            Context.TherapySessions.Add(TherapySession);
 
-            therapySession2 = new()
+            TherapySession2 = new()
             {
                 Type = "1003",
                 Description = "We gaan in deze sesie verder aan de benen",
                 IsPractiseRoom = false,
-                SesionDoneBy = student,
-                SessionDoneByID = student.FysioWorkerID,
+                SesionDoneBy = Student,
+                SessionDoneByID = Student.FysioWorkerID,
                 SessionStartTime = DateTime.Now.AddDays(13),
                 SessionEndTime = DateTime.Now.AddDays(13).AddHours(1),
                 CreationDate = DateTime.Now.AddDays(-2)
             };
-            context.TherapySessions.Add(therapySession2);
+            Context.TherapySessions.Add(TherapySession2);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void SeedPatientFiles()
         {
             List<TherapySession> sessions = new();
-            foreach (TherapySession ts in context.TherapySessions)
+            foreach (TherapySession ts in Context.TherapySessions)
             {
                 sessions.Add(ts);
             }
             PatientFile file = new()
             {
-                patientID = patient.PatientID,
-                patient = patient,
-                age = patient.Age,
-                issueDescription = "Patient heeft last van zijn been",
-                diagnoseCode = "1111",
-                diagnoseCodeComment = "bla bla bla....",
-                isStudent = patient.IsStudent,
-                intakeDoneBy = student,
-                intakeDoneByID = student.FysioWorkerID,
-                intakeSuppervisedBy = worker,
-                IdintakeSuppervisedBy = worker.FysioWorkerID,
-                IdmainTherapist = worker.FysioWorkerID,
-                mainTherapist = worker,
-                registerDate = DateTime.Now.AddYears(-1),
-                CommentIDs = ConvertToString(new List<int>() { comment.CommentId}),
-                comments = new List<Comment> { comment },
-                IdactionPlan = actionPlan.ActionID,
-                actionPlan = actionPlan,
-                sessions = sessions,
-                sessionIDs = ConvertToString(seedSessionIDs(sessions))
+                PatientID = Patient.PatientID,
+                Patient = Patient,
+                Age = Patient.Age,
+                IssueDescription = "Patient heeft last van zijn been",
+                DiagnoseCode = "1111",
+                DiagnoseCodeComment = "bla bla bla....",
+                IsStudent = Patient.IsStudent,
+                IntakeDoneBy = Student,
+                IntakeDoneByID = Student.FysioWorkerID,
+                IntakeSuppervisedBy = Worker,
+                IdintakeSuppervisedBy = Worker.FysioWorkerID,
+                IdmainTherapist = Worker.FysioWorkerID,
+                MainTherapist = Worker,
+                RegisterDate = DateTime.Now.AddYears(-1),
+                CommentIDs = ConvertToString(new List<int>() { Comment.CommentId}),
+                Comments = new List<Comment> { Comment },
+                IdactionPlan = ActionPlan.ActionID,
+                ActionPlan = ActionPlan,
+                Sessions = sessions,
+                SessionIDs = ConvertToString(SeedSessionIDs(sessions))
             };
-            context.PatientFiles.Add(file);
+            Context.PatientFiles.Add(file);
 
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
-        private List<int> seedSessionIDs(List<TherapySession> sessions)
+        private static List<int> SeedSessionIDs(List<TherapySession> sessions)
         {
             List<int> ints = new();
             foreach (TherapySession ts in sessions)
@@ -298,7 +298,7 @@ namespace DatabaseHandler.Data
             return ints;
         }
 
-        private string ConvertToString(List<int> list)
+        private static string ConvertToString(List<int> list)
         {
             string s = "";
             foreach (int i in list)

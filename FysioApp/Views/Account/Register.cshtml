@@ -1,9 +1,10 @@
-﻿@{
+﻿@model RegisterData
+@{
     ViewData["Title"] = "Registreer";
 }
 
 <div class="container">
-    <form class="form-group" asl-action="Register" method="post">
+    <form class="form-group" asp-action="Register" method="post">
         <div>
             <label>Gebruikersnaam: </label>
             <input class="form-control" name="username" type="text"/>
@@ -14,7 +15,8 @@
         </div>
         <div>
             <label>Wachtwoord: </label>
-            <input class="form-control" name="password" type="password"/>
+            <div><span asp-validation-for="Password" class="text-danger"></span></div>
+            <input class="form-control" name="password" type="password" />
         </div>
         <div>
             <label>herhaal wachtwoord: </label>

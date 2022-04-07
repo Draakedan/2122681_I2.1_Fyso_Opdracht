@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseHandler.Models;
+using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FysioAppUX.Data;
+using DomainServices.Repos;
 
 namespace FysioAppUX.Models
 {
@@ -14,31 +15,22 @@ namespace FysioAppUX.Models
         public Comment Comment { get; set; }
         public IEnumerable<SelectListItem> CommenterStrings { get; set; }
 
-
-        public NewCommentData(DataReciever reciever, int dossierId)
+        public NewCommentData(IPatientFile patientFile, IFysioWorker fysioWorker, int dossierId, Comment comment)
         {
             DossierID = dossierId;
-            Comment = new();
-            FillCommenterString(GetFysioWorkers(reciever));
-            SetSelectedWorker(reciever);
+            Comment = comment ?? new();
+            FillCommenterString(GetFysioWorkers(patientFile, fysioWorker));
+            SetSelectedWorker(patientFile);
         }
 
-        public NewCommentData(DataReciever reciever, int dossierId, Comment comment)
-        {
-            DossierID = dossierId;
-            Comment = comment;
-            FillCommenterString(GetFysioWorkers(reciever));
-            SetSelectedWorker(reciever);
-        }
-
-        private List<FysioWorker> GetFysioWorkers(DataReciever reciever)
+        private List<FysioWorker> GetFysioWorkers(IPatientFile patientFile, IFysioWorker fysioWorker)
         {
             List<FysioWorker> workers = new();
-            PatientFile patientFile = reciever.GetOnePatientFile(DossierID);
-            workers.Add(patientFile.mainTherapist);
-            if (!patientFile.mainTherapist.IsStudent)
+            PatientFile file = patientFile.GetPatientFileByID(DossierID);
+            workers.Add(file.MainTherapist);
+            if (!file.MainTherapist.IsStudent)
             {
-                foreach (FysioWorker worker in reciever.GetAllFysioWorkers())
+                foreach (FysioWorker worker in fysioWorker.GetAllFysioWorkers())
                     if (worker.IsStudent)
                         workers.Add(worker);
             }
@@ -48,7 +40,7 @@ namespace FysioAppUX.Models
         private void FillCommenterString(List<FysioWorker> workers)
         {
             List<SelectListItem> items = new();
-            SelectListItem sli = new();
+            SelectListItem sli;
             foreach (FysioWorker w in workers)
             {
                 sli = new(
@@ -60,9 +52,9 @@ namespace FysioAppUX.Models
            CommenterStrings = items;
         }
 
-        private void SetSelectedWorker(DataReciever reciever)
+        private void SetSelectedWorker(IPatientFile patientFile)
         {
-            int id = reciever.GetOnePatientFile(DossierID).IdmainTherapist;
+            int id = patientFile.GetPatientFileByID(DossierID).IdmainTherapist;
             if (Comment != null)
                 id = Comment.CommenterID;
             foreach (SelectListItem sli in CommenterStrings)

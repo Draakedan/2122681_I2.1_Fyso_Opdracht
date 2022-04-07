@@ -3,6 +3,6 @@
     ViewData["Title"] = "Verwijder Sessie";
 }
 
-<h4>Weet je zeker dat de sessie: @Model.Description om @Model.SessionStartTime.ToShortDateString() @Model.SessionStartTime.ToShortTimeString() door @Model.SesionDoneBy.Name?</h4>
-<a class="btn btn-primary" href="@Url.Action("PatientHome", "Home")">nee (sessie wordt niet verwijderd)</a>
-<a class="btn btn-danger" href="@Url.Action("ComfirmDeletePatientSession", "Home", new { id = Model.Id})">Ja (sessie wordt verwijderd)</a>
+<h4>Weet je zeker dat de sessie: @Model.Description om @Model.SessionStartTime.ToShortDateString() @Model.SessionStartTime.ToShortTimeString() door @Model.SesionDoneBy.Name wilt annuleren?</h4>
+<a class="btn btn-primary" href="@Url.Action("PatientHome", "Home")">nee (sessie wordt niet geannuleerd)</a>
+<a class="btn btn-danger" href="@Url.Action("ComfirmDeletePatientSession", "Home", new { id = Model.Id})">Ja (sessie wordt geannuleerd)</a>

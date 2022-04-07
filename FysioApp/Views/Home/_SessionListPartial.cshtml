@@ -11,26 +11,66 @@
             <p>@Model.Session.Description</p>
         </div>
         <div class="col-6">
-            @if (!Model.IsFromSessionList)
+            @if (DateTime.Now.Subtract(Model.Session.CreationDate).TotalHours < 24)
             {
-                <a class="btn btn-primary" href="@Url.Action("UpdateSession", "Home", new { id = Model.Session.Id })">edit</a>
+                @if (Model.IsFromSessionList)
+                {
+                    @if (Model.IsFromHome)
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("UpdateSessionFromList", "Home", new { id = Model.Session.Id })">edit</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("UpdateSessionDossierSessionList", "Home", new { id = Model.Session.Id })">edit</a>
+                    }
+                }
+                else if (Model.IsFromHome)
+                {
+                    <a class="btn btn-primary" href="@Url.Action("UpdateSessionHome", "Home", new { id = Model.Session.Id })">edit</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary" href="@Url.Action("UpdateSession", "Home", new { id = Model.Session.Id })">edit</a>
+                }
             }
-            else
-            {
-                <a class="btn btn-primary" href="@Url.Action("UpdateSessionFromList", "Home", new { id = Model.Session.Id })">edit</a>
-            }
+
             @if (Model.IsPatient)
             {
                 @if (DateTime.Now.Subtract(Model.Session.SessionStartTime).TotalHours < -24)
                 {
-                    <a class="btn btn-danger" href="@Url.Action("DeletePatientSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                    @if (Model.IsFromSessionList)
+                    {
+                        <a class="btn btn-danger" href="@Url.Action("ListDeleteSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger" href="@Url.Action("DeletePatientSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                    }
                 }
             }
             else
             {
                 @if (DateTime.Now.Subtract(Model.Session.CreationDate).TotalHours < 24)
                 {
-                    <a class="btn btn-danger" href="@Url.Action("DeleteSession", "Home", new { id = Model.Session.Id })">delete</a>
+                    @if (Model.IsFromSessionList)
+                    {
+                        @if (Model.IsFromHome)
+                        {
+                            <a class="btn btn-danger" href="@Url.Action("ListDeleteSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-danger" href="@Url.Action("DeleteSessionDossierSessionList", "Home", new { id = Model.Session.Id })">annuleer</a>
+                        }
+                    }
+                    else if (Model.IsFromHome)
+                    {
+                        <a class="btn btn-danger" href="@Url.Action("HomeDeleteSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger" href="@Url.Action("DeleteSession", "Home", new { id = Model.Session.Id })">annuleer</a>
+                    }
                 }
             }
             @if (!Model.IsFromDossier)

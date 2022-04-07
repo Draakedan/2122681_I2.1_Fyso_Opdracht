@@ -19,7 +19,7 @@ namespace DatabaseHandler.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DatabaseHandler.Models.ActionPlan", b =>
+            modelBuilder.Entity("DomainModels.Models.ActionPlan", b =>
                 {
                     b.Property<int>("ActionID")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,7 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("ActionPlans");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.Adress", b =>
+            modelBuilder.Entity("DomainModels.Models.Adress", b =>
                 {
                     b.Property<int>("AdressID")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("Adresses");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.Comment", b =>
+            modelBuilder.Entity("DomainModels.Models.Comment", b =>
                 {
                     b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
@@ -98,25 +98,32 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.FysioWorker", b =>
+            modelBuilder.Entity("DomainModels.Models.FysioWorker", b =>
                 {
                     b.Property<int>("FysioWorkerID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AvailableDays")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BIGNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DayEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DayStartTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsStudent")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -133,7 +140,7 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("FysioWorkers");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.Patient", b =>
+            modelBuilder.Entity("DomainModels.Models.Patient", b =>
                 {
                     b.Property<int>("PatientID")
                         .ValueGeneratedOnAdd()
@@ -150,11 +157,12 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnsuranceCompany")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Index")
@@ -167,11 +175,9 @@ namespace DatabaseHandler.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -190,83 +196,80 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.PatientFile", b =>
+            modelBuilder.Entity("DomainModels.Models.PatientFile", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ActionPlanActionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("CommentIDs")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiagnoseCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiagnoseCodeComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdactionPlan")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdintakeSuppervisedBy")
+                    b.Property<int>("IdintakeSuppervisedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("IdmainTherapist")
                         .HasColumnType("int");
 
-                    b.Property<int?>("actionPlanActionID")
+                    b.Property<int>("IntakeDoneByID")
                         .HasColumnType("int");
 
-                    b.Property<int>("age")
+                    b.Property<int?>("IntakeSuppervisedByFysioWorkerID")
                         .HasColumnType("int");
 
-                    b.Property<string>("diagnoseCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("diagnoseCodeComment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("fireDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("intakeDoneByID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("intakeSuppervisedByFysioWorkerID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isStudent")
+                    b.Property<bool>("IsStudent")
                         .HasColumnType("bit");
 
-                    b.Property<string>("issueDescription")
-                        .IsRequired()
+                    b.Property<string>("IssueDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("mainTherapistFysioWorkerID")
+                    b.Property<int?>("MainTherapistFysioWorkerID")
                         .HasColumnType("int");
 
-                    b.Property<int>("patientID")
+                    b.Property<int>("PatientID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("registerDate")
+                    b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("sessionIDs")
+                    b.Property<string>("SessionIDs")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("actionPlanActionID");
+                    b.HasIndex("ActionPlanActionID");
 
-                    b.HasIndex("intakeDoneByID");
+                    b.HasIndex("IntakeDoneByID");
 
-                    b.HasIndex("intakeSuppervisedByFysioWorkerID");
+                    b.HasIndex("IntakeSuppervisedByFysioWorkerID");
 
-                    b.HasIndex("mainTherapistFysioWorkerID");
+                    b.HasIndex("MainTherapistFysioWorkerID");
 
-                    b.HasIndex("patientID");
+                    b.HasIndex("PatientID");
 
                     b.ToTable("PatientFiles");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.TherapySession", b =>
+            modelBuilder.Entity("DomainModels.Models.TherapySession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -312,22 +315,22 @@ namespace DatabaseHandler.Migrations
                     b.ToTable("TherapySessions");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.Comment", b =>
+            modelBuilder.Entity("DomainModels.Models.Comment", b =>
                 {
-                    b.HasOne("DatabaseHandler.Models.FysioWorker", "CommentMadeBy")
+                    b.HasOne("DomainModels.Models.FysioWorker", "CommentMadeBy")
                         .WithMany()
                         .HasForeignKey("CommentMadeByFysioWorkerID");
 
-                    b.HasOne("DatabaseHandler.Models.PatientFile", null)
-                        .WithMany("comments")
+                    b.HasOne("DomainModels.Models.PatientFile", null)
+                        .WithMany("Comments")
                         .HasForeignKey("PatientFileID");
 
                     b.Navigation("CommentMadeBy");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.Patient", b =>
+            modelBuilder.Entity("DomainModels.Models.Patient", b =>
                 {
-                    b.HasOne("DatabaseHandler.Models.Adress", "Adress")
+                    b.HasOne("DomainModels.Models.Adress", "Adress")
                         .WithMany()
                         .HasForeignKey("AdressID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -336,61 +339,61 @@ namespace DatabaseHandler.Migrations
                     b.Navigation("Adress");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.PatientFile", b =>
+            modelBuilder.Entity("DomainModels.Models.PatientFile", b =>
                 {
-                    b.HasOne("DatabaseHandler.Models.ActionPlan", "actionPlan")
+                    b.HasOne("DomainModels.Models.ActionPlan", "ActionPlan")
                         .WithMany()
-                        .HasForeignKey("actionPlanActionID");
+                        .HasForeignKey("ActionPlanActionID");
 
-                    b.HasOne("DatabaseHandler.Models.FysioWorker", "intakeDoneBy")
+                    b.HasOne("DomainModels.Models.FysioWorker", "IntakeDoneBy")
                         .WithMany()
-                        .HasForeignKey("intakeDoneByID")
+                        .HasForeignKey("IntakeDoneByID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatabaseHandler.Models.FysioWorker", "intakeSuppervisedBy")
+                    b.HasOne("DomainModels.Models.FysioWorker", "IntakeSuppervisedBy")
                         .WithMany()
-                        .HasForeignKey("intakeSuppervisedByFysioWorkerID");
+                        .HasForeignKey("IntakeSuppervisedByFysioWorkerID");
 
-                    b.HasOne("DatabaseHandler.Models.FysioWorker", "mainTherapist")
+                    b.HasOne("DomainModels.Models.FysioWorker", "MainTherapist")
                         .WithMany()
-                        .HasForeignKey("mainTherapistFysioWorkerID");
+                        .HasForeignKey("MainTherapistFysioWorkerID");
 
-                    b.HasOne("DatabaseHandler.Models.Patient", "patient")
+                    b.HasOne("DomainModels.Models.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("patientID")
+                        .HasForeignKey("PatientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("actionPlan");
+                    b.Navigation("ActionPlan");
 
-                    b.Navigation("intakeDoneBy");
+                    b.Navigation("IntakeDoneBy");
 
-                    b.Navigation("intakeSuppervisedBy");
+                    b.Navigation("IntakeSuppervisedBy");
 
-                    b.Navigation("mainTherapist");
+                    b.Navigation("MainTherapist");
 
-                    b.Navigation("patient");
+                    b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.TherapySession", b =>
+            modelBuilder.Entity("DomainModels.Models.TherapySession", b =>
                 {
-                    b.HasOne("DatabaseHandler.Models.PatientFile", null)
-                        .WithMany("sessions")
+                    b.HasOne("DomainModels.Models.PatientFile", null)
+                        .WithMany("Sessions")
                         .HasForeignKey("PatientFileID");
 
-                    b.HasOne("DatabaseHandler.Models.FysioWorker", "SesionDoneBy")
+                    b.HasOne("DomainModels.Models.FysioWorker", "SesionDoneBy")
                         .WithMany()
                         .HasForeignKey("SesionDoneByFysioWorkerID");
 
                     b.Navigation("SesionDoneBy");
                 });
 
-            modelBuilder.Entity("DatabaseHandler.Models.PatientFile", b =>
+            modelBuilder.Entity("DomainModels.Models.PatientFile", b =>
                 {
-                    b.Navigation("comments");
+                    b.Navigation("Comments");
 
-                    b.Navigation("sessions");
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

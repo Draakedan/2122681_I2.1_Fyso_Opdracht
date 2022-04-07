@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseHandler.Models;
+using DomainModels.Models;
+using DomainServices.Repos;
 using FysioAppUX.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,17 +15,17 @@ namespace FysioAppUX.Models
         public ActionPlan Plan { get; set; }
         public IEnumerable<SelectListItem> Workers { get; set; }
 
-        public UpdateDossierData(PatientFile file, DataReciever reciever)
+        public UpdateDossierData(PatientFile file, IFysioWorker fysioWorkers)
         {
             File = file;
-            Plan = file.actionPlan;
-            FillWorkers(reciever.GetAllFysioWorkers());
+            Plan = file.ActionPlan;
+            FillWorkers(fysioWorkers.GetAllFysioWorkers().ToList());
         }
 
         private void FillWorkers(ICollection<FysioWorker> workers)
         {
             List<SelectListItem> sList = new();
-            SelectListItem sli = new();
+            SelectListItem sli;
             foreach (FysioWorker w in workers)
             {
                 sli = new(

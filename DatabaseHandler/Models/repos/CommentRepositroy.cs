@@ -1,55 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using DatabaseHandler.Data;
+using DomainModels.Models;
+using DomainServices.Repos;
 
 namespace DatabaseHandler.Models
 {
-    public class CommentRepositroy : IRepository<Comment>
+    public class CommentRepositroy : IComment
     {
-        public List<Comment> Items { get; init; }
+        private readonly FysioDataContext Context;
 
-        public CommentRepositroy()
-        { 
-            Items = new();
+        public CommentRepositroy(FysioDataContext context) => Context = context;
+
+        public void AddComment(Comment comment, int id)
+        {
+            Context.Comments.Add(comment);
+            Context.SaveChanges();
+            new PatientFileRepository(Context).AddComment(comment, id);
         }
 
-        public void Add(Comment elem)
-        {
-            Items.Add(elem);
-        }
+        public bool CommentExists(int id) => GetCommentByID(id) != null;
 
-        public bool Exists(int id)
+        public List<Comment> GetAllComments()
         {
-            try
+            List<Comment> commentList = new();
+            foreach (Comment c in Context.Comments)
             {
-                return Items.Contains(Items[id]);
+                c.CommentMadeBy = new FysioWorkerRepositroy(Context).GetFysioWorkerByID(c.CommenterID);
+                commentList.Add(c);
             }
-            catch
-            {
-                return false;
-            }
+            return commentList;
         }
 
-        public Comment Get(int id)
+        public Comment GetCommentByID(int id)
         {
-            foreach (Comment c in Items)
-                if (c.CommenterID == id)
-                    return c;
-            return null;
-        }
-
-        public List<Comment> GetAll()
-        {
-            return Items;
-        }
-
-        public Comment GetItemByID(int id)
-        {
-            foreach (Comment c in Items)
+            foreach (Comment c in Context.Comments)
                 if (c.CommentId == id)
+                {
+                    c.CommentMadeBy = new FysioWorkerRepositroy(Context).GetFysioWorkerByID(c.CommenterID);
                     return c;
+                }
             return null;
+        }
+
+        public void RemoveAllCommentsForFile(int id)
+        {
+            PatientFile patientFile = new PatientFileRepository(Context).GetPatientFileByID(id);
+            foreach (Comment comment in patientFile.Comments)
+                Context.Comments.Remove(comment);
         }
     }
 }

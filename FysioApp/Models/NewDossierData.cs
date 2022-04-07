@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseHandler.Models;
+using DomainModels.Models;
+using DomainServices.Repos;
 using FysioAppUX.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -10,47 +11,58 @@ namespace FysioAppUX.Models
 {
     public class NewDossierData
     {
-        public List<Patient> patients { get; set; }
-        public IEnumerable<SelectListItem> patientStrings { get; set; }
-        public List<FysioWorker> workers { get; set; }
+        public List<Patient> Patients { get; set; }
+        public IEnumerable<SelectListItem> PatientStrings { get; set; }
+        public List<FysioWorker> Workers { get; set; }
         public IEnumerable<SelectListItem> AllWorkers { get; set; }
-        public List<FysioWorker> students { get; set; }
-        public List<FysioWorker> fysios { get; set; }
+        public List<FysioWorker> Students { get; set; }
+        public List<FysioWorker> Fysios { get; set; }
         public IEnumerable<SelectListItem> FysioStrings { get; set; }
-        public List<ActionPlan> plans { get; set; }
+        public List<ActionPlan> Plans { get; set; }
         public IEnumerable<SelectListItem> PlanStrings { get; set; }
-        public PatientFile file { get; set; }
-        public IEnumerable<Diagnose> diagnoses { get; set; }
-        public IEnumerable<SelectListItem> diagnoseList { get; set; }
+        public PatientFile File { get; set; }
+        public IEnumerable<Diagnose> Diagnoses { get; set; }
+        public IEnumerable<SelectListItem> DiagnoseList { get; set; }
 
-        public int selectedPatient { get; set; } = 0;
+        public int SelectedPatient { get; set; } = 0;
         public string SelectedIntaker { get; set; }
-        public string selectedSupperviser { get; set; }
-        public string selectedMain { get; set; }
-        public string selectedPlan { get; set; }
-        public string selectedDiagnose { get; set; }
+        public string SelectedSupperviser { get; set; }
+        public string SelectedMain { get; set; }
+        public string SelectedPlan { get; set; }
+        public string SelectedDiagnose { get; set; }
 
         public NewDossierData()
         { }
 
-        public NewDossierData(DataReciever reciever)
+        public NewDossierData(IActionPlan actionPlan, IPatient patient, IFysioWorker fysioWorker, IPatientFile file)
         {
-            patients = reciever.GetAllPatients().ToList();
-            workers = reciever.GetAllFysioWorkers().ToList();
-            students = new();
-            fysios = new();
+            Patients = GetPatientsWithNoDossier(patient.GetAllPatients().ToList(), file);
+            Workers = fysioWorker.GetAllFysioWorkers().ToList();
+            Students = new();
+            Fysios = new();
             FillStudentsAndFysios();
-            plans = reciever.GetAllActionPlans().ToList();
-            file = new();
+            Plans = actionPlan.GetAllActionPlans().ToList();
+            File = new();
             CreateStrings();
 
+        }
+
+        private static List<Patient> GetPatientsWithNoDossier(List<Patient> allPatients, IPatientFile file)
+        {
+            List<Patient> patientList = new();
+            foreach (Patient p in allPatients)
+            {
+                if (file.GetPatientFileByPatient(p.PatientID) == null)
+                    patientList.Add(p);
+            }
+            return patientList;
         }
 
         private void CreateStrings()
         {
             List<SelectListItem> sList = new();
             SelectListItem sli;
-            foreach (Patient p in patients)
+            foreach (Patient p in Patients)
             {
                 sli = new(
                     $"{p.Name}",
@@ -58,13 +70,13 @@ namespace FysioAppUX.Models
                     );
                 sList.Add(sli);
             }
-            patientStrings = sList;
+            PatientStrings = sList;
 
             sList = new();
-            foreach (FysioWorker w in workers)
+            foreach (FysioWorker w in Workers)
             {
                 sli = new(
-                    $"{w.FysioWorkerID} - {w.Name}",
+                    $"{w.FysioWorkerID} - {w.Name} {GetFysioStudentString(w)}",
                     w.FysioWorkerID.ToString()
                     );
                 sList.Add(sli);
@@ -72,7 +84,7 @@ namespace FysioAppUX.Models
             AllWorkers = sList;
 
             sList = new();
-            foreach (FysioWorker w in fysios)
+            foreach (FysioWorker w in Fysios)
             {
                 sli = new(
                     $"{w.FysioWorkerID} - {w.Name}, {w.WorkerNumber}, {w.BIGNumber}",
@@ -83,7 +95,7 @@ namespace FysioAppUX.Models
             FysioStrings = sList;
 
             sList = new();
-            foreach (ActionPlan a in plans)
+            foreach (ActionPlan a in Plans)
             {
                 sli = new(
                     $"{a.ActionID} - {a.TimePerSession} uur, {a.SessionsPerWeek}x per week",
@@ -94,21 +106,27 @@ namespace FysioAppUX.Models
             PlanStrings = sList;
         }
 
+        private static string GetFysioStudentString(FysioWorker w)
+        {
+            if (w.IsStudent)
+                return "(student)";
+            else return "(Fysio)";
+        }
 
         private void FillStudentsAndFysios()
         {
-            foreach (FysioWorker w in workers)
+            foreach (FysioWorker w in Workers)
             {
                 if (w.IsStudent)
-                    students.Add(w);
+                    Students.Add(w);
                 else
-                    fysios.Add(w);
+                    Fysios.Add(w);
             }
         }
 
-        public async Task FillDiagnoses(OwnerConsumer consumer)
+        public void FillDiagnoses(IDiagnose diagnose)
         {
-            diagnoses = await consumer.GetAllDiagnoses();
+            Diagnoses = diagnose.GetAllDiagnoses();
             CreateDiagnoseList();
         }
 
@@ -116,18 +134,18 @@ namespace FysioAppUX.Models
         {
             List<SelectListItem> dList = new();
             SelectListItem sli;
-            foreach (Diagnose d in diagnoses)
-                {
-                if (d.Pathologie != null && d.Code != null && d.lichaamslocalisatie != null)
+            foreach (Diagnose d in Diagnoses)
+            {
+                if (d.Pathologie != null && d.Code != 0 && d.Lichaamslocalisatie != null)
                 {
                     sli = new(
-                    $"{d.Code}: {d.Pathologie} in {d.lichaamslocalisatie}",
+                    $"{d.Code}: {d.Pathologie} in {d.Lichaamslocalisatie}",
                     d.Code.ToString()
                     );
                     dList.Add(sli);
                 }
             }
-            diagnoseList = dList;
+            DiagnoseList = dList;
         }
     }
 }

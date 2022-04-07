@@ -5,19 +5,19 @@
 
 <div class="container">
     <form class="form-group" asp-action="NewDossier" method="post">
-        <label asp-for="selectedPatient">Selecteer patient:</label>
-        <div><span asp-validation-for="selectedPatient" class="text-danger"></span></div>
-        <select class="form-control" asp-for="selectedPatient" asp-items="Model.patientStrings">
+        <label asp-for="SelectedPatient">Selecteer patient:</label>
+        <div><span asp-validation-for="SelectedPatient" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedPatient" asp-items="Model.PatientStrings">
             <option value="">Kies Patient</option>
         </select>
 
-        <label asp-for="file.issueDescription"> Voer globale beschrijving patient in:</label>
-        <div><span asp-validation-for="file.issueDescription" class="text-danger"></span></div>
-        <textarea asp-for="file.issueDescription" class="form-control"></textarea>
+        <label asp-for="File.IssueDescription"> Globale beschrijving patient:</label>
+        <div><span asp-validation-for="File.IssueDescription" class="text-danger"></span></div>
+        <textarea asp-for="File.IssueDescription" class="form-control"></textarea>
 
-        <label asp-for="selectedDiagnose">Selecteer Diagnose</label>
-        <div><span asp-validation-for="selectedDiagnose" class="text-danger"></span></div>
-        <select class="form-control" asp-for="selectedDiagnose" asp-items="Model.diagnoseList">
+        <label asp-for="SelectedDiagnose">Selecteer Diagnose:</label>
+        <div><span asp-validation-for="SelectedDiagnose" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedDiagnose" asp-items="Model.DiagnoseList">
             <option value="">Kies Diagnose</option>
         </select>
 
@@ -27,29 +27,29 @@
             <option value="">Kies Fysiotherapist of Student</option>
         </select>
 
-        <label asp-for="selectedSupperviser">Id intake onder toezicht van:</label>
-        <div><span asp-validation-for="selectedSupperviser" class="text-danger"></span></div>
-        <select class="form-control" asp-for="selectedSupperviser" asp-items="Model.FysioStrings">
+        <label asp-for="SelectedSupperviser">intake onder toezicht van:</label>
+        <div><span asp-validation-for="SelectedSupperviser" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedSupperviser" asp-items="Model.FysioStrings">
             <option value="">Kies Fysiotherapist</option>
         </select>
 
-        <label asp-for="selectedMain">Selecteer hoofdbehandelaar:</label>
-        <div><span asp-validation-for="selectedMain" class="text-danger"></span></div>
-        <select class="form-control" asp-for="selectedMain" asp-items="Model.AllWorkers">
+        <label asp-for="SelectedMain">Hoofdbehandelaar:</label>
+        <div><span asp-validation-for="SelectedMain" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedMain" asp-items="Model.AllWorkers">
             <option value="">Kies Fysiotherapeut of student</option>
         </select>
 
-        <label asp-for="file.registerDate">Datum Registreren:</label>
-        <div><span asp-validation-for="file.registerDate" class="text-danger"></span></div>
-        <input asp-for="file.registerDate" class="form-control" type="date" />
+        <label asp-for="File.RegisterDate">Datum Registratie:</label>
+        <div><span asp-validation-for="File.RegisterDate" class="text-danger"></span></div>
+        <input asp-for="File.RegisterDate" class="form-control" type="date" />
 
-        <label asp-for="file.fireDate">Datum ontslag:</label>
-        <div><span asp-validation-for="file.fireDate" class="text-danger"></span></div>
-        <input asp-for="file.fireDate" class="form-control" type="date" />
+        <label asp-for="File.FireDate">Datum ontslag:</label>
+        <div><span asp-validation-for="File.FireDate" class="text-danger"></span></div>
+        <input asp-for="File.FireDate" class="form-control" type="date" />
 
-        <label asp-for="selectedPlan">Selecteer behandelplan:</label>
-        <div><span asp-validation-for="selectedPlan" class="text-danger"></span></div>
-        <select class="form-control" asp-for="selectedPlan" asp-items="Model.PlanStrings">
+        <label asp-for="SelectedPlan">Selecteer behandelplan:</label>
+        <div><span asp-validation-for="SelectedPlan" class="text-danger"></span></div>
+        <select class="form-control" asp-for="SelectedPlan" asp-items="Model.PlanStrings">
             <option value="">Kies behandelplan</option>
         </select>
 

@@ -1,4 +1,4 @@
-﻿@model DatabaseHandler.Models.Patient
+﻿@model DomainModels.Models.Patient
 @{
     ViewData["Title"] = $"{Model.PatientNumber} info";
 }
@@ -8,5 +8,3 @@
 <p>Leeftijd: @Model.Age</p>
 <p>stad: @Model.Adress.City</p>
 <p>Land: @Model.Adress.Country</p>
-@*<p>Datum van registratie: @Model.RegisterDate</p>
-<p>Datum voor onstalg: @Model.FireDate</p>*@

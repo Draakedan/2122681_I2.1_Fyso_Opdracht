@@ -1,57 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using DomainModels.Models;
+using DomainServices.Repos;
+using DatabaseHandler.Data;
 
 namespace DatabaseHandler.Models
 {
-    public class ActionPlanRepository : IRepository<ActionPlan>
+    public class ActionPlanRepository : IActionPlan
     {
-        public List<ActionPlan> Items { get; init; }
+        private readonly FysioDataContext Context;
 
-        public ActionPlanRepository()
+        public ActionPlanRepository(FysioDataContext context) => Context = context;
+
+        public void AddActionPlan(ActionPlan actionPlan)
         {
-            Items = new();
+            Context.ActionPlans.Add(actionPlan);
+            Context.SaveChanges();
         }
 
-        public void Add(ActionPlan elem)
+        public bool ActionPlanExists(int id) => GetActionPlanByID(id) != null;
+
+        public List<ActionPlan> GetAllActionPlans()
         {
-            Items.Add(elem);
+            List<ActionPlan> actionPlanList = new();
+            foreach (ActionPlan actionPlan in Context.ActionPlans)
+                actionPlanList.Add(actionPlan);
+            return actionPlanList;
         }
 
-        public bool Exists(int id)
+        public ActionPlan GetActionPlanByID(int id)
         {
-            try
-            {
-                return Items.Contains(Items[id]);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public ActionPlan Get(int id)
-        {
-            foreach (ActionPlan plan in Items)
-            {
-                if (plan.ActionID == id)
-                    return plan;
-            }
-            return null;
-        }
-
-        public List<ActionPlan> GetAll()
-        {
-            return Items;
-        }
-
-        public ActionPlan GetItemByID(int id)
-        {
-            foreach (ActionPlan a in Items)
+            foreach (ActionPlan a in Context.ActionPlans)
                 if (a.ActionID == id)
                     return a;
             return null;
+        }
+
+        public void UpdateActionPlan(ActionPlan plan)
+        {
+            Context.ActionPlans.Update(plan);
+            Context.SaveChanges();
         }
     }
 }

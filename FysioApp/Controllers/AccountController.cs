@@ -124,13 +124,15 @@ namespace FysioAppUX.Controllers
             if (user != null)
             {
                 //sign in
-              var signInResult =  await _signInManager.PasswordSignInAsync(user, password, false, false);
+                var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
                 if (signInResult.Succeeded)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("Patient"))
                         return RedirectToAction("PatientHome", "Home");
+                    else if (roles.Contains("PhysicalTherapist"))
+                        return RedirectToAction("FysioHome", "Home");
                     return RedirectToAction("index", "home");
                 }
             }
@@ -175,6 +177,26 @@ namespace FysioAppUX.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string username, string email, string password, string comfirmPass)
         {
+            if (password.Any(ch => !Char.IsDigit(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a digit");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsNumber(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a number");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsSymbol(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a symbol");
+                return View();
+            }
+            if (password.Length >= 8)
+            {
+                ModelState.AddModelError("Password", "passwords must be at least 8 characters");
+                return View();
+            }
             if (password == comfirmPass)
             {
                 var user = new IdentityUser
@@ -195,7 +217,7 @@ namespace FysioAppUX.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(password),"passwords don't match");
+                ModelState.AddModelError("Password", "passwords don't match");
                 return View();
             }
 

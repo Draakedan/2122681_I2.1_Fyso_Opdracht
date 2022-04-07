@@ -5,11 +5,11 @@
 
 <div class="container">
     <form class="form-group" asp-action="NewActionPlan" method="post">
-        <label asp-for="SessionsPerWeek">Voer aantal sessies per week in:</label>
+        <label asp-for="SessionsPerWeek">Aantal sessies per week:</label>
         <div><span asp-validation-for="SessionsPerWeek" class="text-danger"></span></div>
         <input asp-for="SessionsPerWeek" class="form-control" type="number" />
 
-        <label asp-for="TimePerSession">Voer tijdsduur per sessie in:</label>
+        <label asp-for="TimePerSession">Tijdsduur (in uren) per sessie:</label>
         <div><span asp-validation-for="TimePerSession" class="text-danger"></span></div>
         <input asp-for="TimePerSession" class="form-control" type="number" />
 

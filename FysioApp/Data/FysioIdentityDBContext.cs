@@ -9,9 +9,6 @@ namespace FysioAppUX.Data
 {
     public class FysioIdentityDBContext : IdentityDbContext
     {
-        public FysioIdentityDBContext()
-        { 
-        }
 
         public string GetUserEmail(string name)
         {
@@ -23,11 +20,6 @@ namespace FysioAppUX.Data
             :base (options)
         { 
 
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=desktop-vh9b6rm;Initial Catalog=FysioIDentity;Integrated Security=True");
         }
 
         //

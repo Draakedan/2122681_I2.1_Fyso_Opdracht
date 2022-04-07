@@ -1,55 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using DatabaseHandler.Data;
+using DomainModels.Models;
+using DomainServices.Repos;
 
 namespace DatabaseHandler.Models
 {
-    public class FysioWorkerRepositroy : IRepository<FysioWorker>
+    public class FysioWorkerRepositroy : IFysioWorker
     {
+        private readonly FysioDataContext Context;
 
-        public List<FysioWorker> Items { get; init; }
+        public FysioWorkerRepositroy(FysioDataContext context) => Context = context;
 
-        public FysioWorkerRepositroy()
+        public void AddFysioWorker(FysioWorker fysioWorker)
         {
-            Items = new();
+            Context.FysioWorkers.Add(fysioWorker);
+            Context.SaveChanges();
         }
 
-        public void Add(FysioWorker elem)
-        {
-            Items.Add(elem);
-        }
+        public bool FysioWorkerExists(int id) => GetFysioWorkerByID(id) != null;
 
-        public bool Exists(int id)
+        public List<FysioWorker> GetAllFysioWorkers() 
         {
-            try
+            List<FysioWorker> fysioWorkerList = new();
+            foreach (FysioWorker worker in Context.FysioWorkers)
             {
-                return Items.Contains(Items[id]);
+                fysioWorkerList.Add(worker);
             }
-            catch
-            {
-                return false;
-            }
+            return fysioWorkerList;
         }
 
-        public FysioWorker Get(int id)
+        public FysioWorker GetFysioWorkerByID(int id)
         {
-            foreach (FysioWorker f in Items)
+            foreach (FysioWorker f in Context.FysioWorkers)
                 if (f.FysioWorkerID == id)
                     return f;
             return null;
         }
 
-        public List<FysioWorker> GetAll()
+        public void UpdateFysioWorker(FysioWorker worker)
         {
-            return Items;
+            Context.FysioWorkers.Update(worker);
+            Context.SaveChanges();
         }
 
-        public FysioWorker GetItemByID(int id)
+        public FysioWorker GetFysioWorkerByEmail(string email)
         {
-            foreach (FysioWorker f in Items)
-                if (f.FysioWorkerID == id)
-                    return f;
+            if (email.Equals("default@therapist.com"))
+            {
+                foreach (FysioWorker fw in Context.FysioWorkers)
+                    if (!fw.IsStudent)
+                        return fw;
+                return null;
+            }
+            else if (email.Equals("default@student.com"))
+            {
+                foreach (FysioWorker fw in Context.FysioWorkers)
+                {
+                    if (fw.IsStudent)
+                        return fw;
+                }
+                return null;
+            }
+            else
+                foreach (FysioWorker fw in Context.FysioWorkers)
+                    if (fw.Email == email)
+                        return fw;
             return null;
         }
     }

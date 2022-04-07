@@ -1,54 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using DomainModels.Models;
+using DomainServices.Repos;
+using DatabaseHandler.Data;
 
 namespace DatabaseHandler.Models
 {
-    public class AdressRepository : IRepository<Adress>
+    public class AdressRepository : IAdress
     {
-        public List<Adress> Items { get; init; }
+        private readonly FysioDataContext Context;
 
-        public AdressRepository()
+        public AdressRepository(FysioDataContext context) => Context = context;
+
+        public void AddAdress(Adress adress)
         {
-            Items = new();
+            Context.Adresses.Add(adress);
+            Context.SaveChanges();
         }
 
-        public void Add(Adress elem)
+        public bool AdressExists(int id) => GetAdressByID(id) != null;
+
+        public List<Adress> GetAllAdresses()
         {
-            Items.Add(elem);
+            List<Adress> adressList = new();
+            foreach (Adress adress in Context.Adresses)
+                adressList.Add(adress);
+            return adressList;
         }
 
-        public bool Exists(int id)
+        public Adress GetAdressByID(int id)
         {
-            try
-            {
-                return Items.Contains(Items[id]);
-            }
-            catch {
-                return false;
-            }
-        }
-
-        public Adress Get(int id)
-        {
-            foreach (Adress a in Items)
+            foreach (Adress a in Context.Adresses)
                 if (a.AdressID == id)
                     return a;
             return null;
         }
 
-        public List<Adress> GetAll()
+        public void UpdateAdress(Adress adress)
         {
-            return Items;
-        }
-
-        public Adress GetItemByID(int id)
-        {
-            foreach (Adress a in Items)
-                if (a.AdressID == id)
-                    return a;
-            return null;
+            Context.Adresses.Update(adress);
+            Context.SaveChanges();
         }
     }
 }
