@@ -1,0 +1,69 @@
+﻿body {
+    font: "Trebuchet MS";
+    background-color: rgba(72, 219, 187, 0.05);
+    color: #8F3213;
+    font-family:'Trebuchet MS';
+}
+
+.jumbotron-fluid {
+    background-color: #DB6D48;
+    color: black;
+    font-family:Verdana;
+}
+
+.navbar {
+    color:white;
+}
+
+a {
+    color: black;
+    border-block-color: white;
+    border-bottom: 1px solid;
+}
+
+.btn-primary {
+    background-color: #218F77;
+    border-color: #218F77;
+    color:black;
+}
+
+    .btn-primary:hover {
+        background-color: #6EFFE0;
+        color: black;
+    }
+
+.btn-info {
+    background-color: #218F77;
+    border-color: #218F77;
+    color: black;
+}
+
+    .btn-info:hover {
+        background-color: #6EFFE0;
+        color: black;
+    }
+
+.btn-danger {
+    background-color: #8F3213;
+    border-color: #8F3213;
+    color: black;
+}
+
+    .btn-danger:hover {
+        background-color: #DB6D48;
+        color: white;
+    }
+
+.table {
+    color: black;
+    background-color: #DB6D48;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #8F3213;
+    color:white;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #DB6D48;
+}

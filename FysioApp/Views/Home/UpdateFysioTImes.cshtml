@@ -1,0 +1,26 @@
+﻿@model FysioWorker
+@{ 
+    ViewData["Title"] = "Update beschikbaarheid";
+}
+
+<div class="container">
+    <h3>beschikbaarheid voor afspraken</h3>
+    <form class="form-group" asp-action="UpdateFysioTimes" method="post">
+        <input asp-for="FysioWorkerID" class="invisible" type="number" />
+
+        <label asp-for="AvailableDays">Voer je werkdagen met spaties ertussen bv. 'Dinsdag Woensdag Vrijdag'</label>
+        <div><span asp-validation-for="AvailableDays" class="text-danger"></span></div>
+        <textarea class="form-control" asp-for="AvailableDays"></textarea>
+
+        <label asp-for="DayStartTime">begin tijd werkdag</label>
+        <div><span asp-validation-for="DayStartTime" class="text-danger"></span></div>
+        <input asp-for="DayStartTime" class="form-control" type="time" />
+
+        <label asp-for="DayEndTime">eind tijd werkdag</label>
+        <div><span asp-validation-for="DayEndTime" class="text-danger"></span></div>
+        <input asp-for="DayEndTime" class="form-control" type="time" />
+
+        <button type="submit" class="btn btn-info">opslaan</button>
+    </form>
+
+</div>

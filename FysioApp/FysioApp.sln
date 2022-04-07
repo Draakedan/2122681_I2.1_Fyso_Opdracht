@@ -3,7 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FysioApp", "FysioApp.csproj", "{BE1E42EC-ECF4-44D4-9198-20704658E797}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioAppUX", "FysioAppUX.csproj", "{BE1E42EC-ECF4-44D4-9198-20704658E797}"
+	ProjectSection(ProjectDependencies) = postProject
+		{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39} = {67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioApp.Tests", "..\FysioApp.Test\FysioApp.Tests.csproj", "{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseHandler", "..\DatabaseHandler\DatabaseHandler.csproj", "{C0B05316-AE52-488D-AA10-92402CD0C2FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainModels", "..\DomainModels\DomainModels.csproj", "{486BAD05-1F20-4D56-9A4F-312A8B0115BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainServices", "..\DomainServices\DomainServices.csproj", "{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureAPIHandler", "..\InfrastructureAPIHandler\InfrastructureAPIHandler.csproj", "{1A548FAB-6FFE-4154-AF2E-E2DDEA205BCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +28,26 @@ Global
 		{BE1E42EC-ECF4-44D4-9198-20704658E797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE1E42EC-ECF4-44D4-9198-20704658E797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE1E42EC-ECF4-44D4-9198-20704658E797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B329F37-EFDB-4FE9-9FA7-BFC6B533208D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B05316-AE52-488D-AA10-92402CD0C2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486BAD05-1F20-4D56-9A4F-312A8B0115BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486BAD05-1F20-4D56-9A4F-312A8B0115BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486BAD05-1F20-4D56-9A4F-312A8B0115BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486BAD05-1F20-4D56-9A4F-312A8B0115BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B6AD61-9729-4D21-9BE1-BB7DEAAB8B39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A548FAB-6FFE-4154-AF2E-E2DDEA205BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A548FAB-6FFE-4154-AF2E-E2DDEA205BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A548FAB-6FFE-4154-AF2E-E2DDEA205BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A548FAB-6FFE-4154-AF2E-E2DDEA205BCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

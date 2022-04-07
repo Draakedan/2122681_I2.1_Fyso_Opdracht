@@ -1,0 +1,9 @@
+﻿@model DomainModels.Models.Patient
+
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.PatientNumber</td>
+    <td>@Model.Age</td>
+    <td>@Model.Birthdate</td>
+    <td><a class="btn btn-primary" href="@Url.Action("Patients", "Home", new { id = Model.Index})">Meer Info</a></td>
+    </tr>

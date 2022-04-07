@@ -1,0 +1,116 @@
+﻿@model DossierData
+@{
+    ViewData["Title"] = $"{Model.Dossier.Patient.Name} Dossier";
+}
+
+<div class="container">
+    @if (!Model.IsPatient)
+    {
+        <a class="btn btn-primary" href="@Url.Action("UpdatePatient", "Home", new { id = Model.Dossier.ID })">Update Patient</a>
+        <a class="btn btn-primary" href="@Url.Action("UpdateDossier", "Home", new { id = Model.Dossier.ID })">Update dossier</a>
+    }
+    @if (Model.IsPatient)
+    {
+        <a class="btn btn-primary" href="@Url.Action("UpdateAdress", "Home", new { id = Model.Dossier.ID })">Update adress</a>
+    }
+    <div class="row">
+        <div class="col-md-6">
+            <p>@Model.Dossier.Patient.Name</p>
+            <img alt="foto van @Model.Dossier.Patient.Name" class="img-fluid" style="max-height:350px; padding-bottom:5px" src="@Model.Dossier.Patient.ImageUrl"/>
+        </div>
+        <div class="col-md-6">
+            <h4>@Model.Dossier.PatientID</h4>
+            <p>Naam: @Model.Dossier.Patient.Name</p>
+            <p>Stad: @Model.Dossier.Patient.Adress.City</p>
+            <p>Leeftijd: @Model.Dossier.Patient.Age</p>
+            @if (Model.Dossier.Patient.IsMale)
+            {
+                <p>Geslacht: Man</p>
+            }
+            else
+            {<p>Geslacht: Vrouw</p>}
+            <p>Email: @Model.Dossier.Patient.Email</p>
+            <p>Tel.: @Model.Dossier.Patient.PhoneNumber</p>
+            <p>Datum Aanmelding: @Model.Dossier.RegisterDate.ToShortDateString()</p>
+            @if (Model.Dossier.FireDate != new DateTime())
+            {
+                <p>Datum Ontslag: @Model.Dossier.FireDate.ToShortDateString()</p>
+            }
+            else
+            {
+                <p>Datum Ontslag: Onbekend</p>
+            }
+        </div>
+    </div>
+
+    <div class="border-top border-info">
+        <h4>Diagnose:</h4>
+        <p>@Model.Dossier.DiagnoseCode: @Model.Dossier.DiagnoseCodeComment</p>
+
+        <h4>Klachten:</h4>
+        <p>@Model.Dossier.IssueDescription</p>
+
+        <h4>Hoofdbehandelaar:</h4>
+        <p>@Model.Dossier.MainTherapist.Name</p>
+
+    </div>
+
+    <div class="border border-info p-2">
+        <h4>Behandelplan</h4>
+        <p>aantal sessies per week: @Model.Dossier.ActionPlan.SessionsPerWeek</p>
+        <p>tijdsduur in uren per sessie: @Model.Dossier.ActionPlan.TimePerSession</p>
+    </div>
+
+    <div class="mt-3 mb-2">
+        <h4>Afspraken</h4>
+        @if (Model.Dossier.Sessions.Count == 0)
+        {
+            <p>Er zijn nog geen afsprken gemaakt...</p>
+        }
+        else if (Model.Dossier.Sessions.Count < 3)
+            foreach (TherapySession s in Model.Dossier.Sessions)
+            {
+                <partial name="_SessionListPartial" model="new SessionItemData(false, s, true, Model.IsPatient, false)" />
+            }
+        else
+            for (int i = 0; i < 3; i++)
+            {
+                <partial name="_SessionListPartial" model="new SessionItemData(false, Model.Dossier.Sessions.ElementAt(i), true, Model.IsPatient, false)" />
+            }
+    </div>
+    <a class="btn btn-info" href="@Url.Action("Sessions", "Home", new { id = Model.Dossier.ID})">Bekijk alle afspraken</a>
+    <a class="btn btn-info" href="@Url.Action("NewSession", "Home", new {dossier = Model.Dossier.ID})">Maak nieuwe afspraak</a>
+
+    <div class="mt-3 mb-2">
+        <h4>Commentaar</h4>
+        @if (Model.Dossier.Comments.Count == 0)
+        {
+            <p>Er zijn nog geen comments geplaatst...</p>
+        }
+        else if (Model.Dossier.Comments.Count < 3)
+            foreach (Comment c in Model.Dossier.Comments)
+            {
+                <partial name="_CommentListPartial" model="c" />
+            }
+        else
+            for (int i = 0; i < 3; i++)
+            {
+                <partial name="_CommentListPartial" model="Model.Dossier.Comments.ElementAt(i)" />
+            }
+    </div>
+    <a class="btn btn-info" href="@Url.Action("Comments", "Home", new { id = Model.Dossier.ID})">Bekijk alle comments</a>
+    @if (!Model.IsPatient)
+    {
+        <a class="btn btn-info" href="@Url.Action("NewComment", "Home", new { id = Model.Dossier.ID })">Maak nieuwe comment</a>
+    }
+
+    <div class="border border-info mt-3 p-1">
+        <h4>Intake info</h4>
+        <p>Intake was uitgevoerd door: @Model.Dossier.IntakeDoneBy.Name</p>
+        @if (Model.Dossier.IntakeSuppervisedBy != null)
+        {
+            <p>Intake was uitgevoerd onder toezicht van: @Model.Dossier.IntakeSuppervisedBy.Name</p>
+        }
+    </div>
+
+</div>

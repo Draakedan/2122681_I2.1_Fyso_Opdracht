@@ -1,0 +1,28 @@
+﻿@model RegisterData
+@{
+    ViewData["Title"] = "Registreer";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="Register" method="post">
+        <div>
+            <label>Gebruikersnaam: </label>
+            <input class="form-control" name="username" type="text"/>
+        </div>
+        <div>
+            <label>Email (zelfde email als bij intake is aangegeven): </label>
+            <input class="form-control" name="email" type="email" />
+        </div>
+        <div>
+            <label>Wachtwoord: </label>
+            <div><span asp-validation-for="Password" class="text-danger"></span></div>
+            <input class="form-control" name="password" type="password" />
+        </div>
+        <div>
+            <label>herhaal wachtwoord: </label>
+            <input class="form-control" name="comfirmPass" type="password" />
+        </div>
+
+        <button type="submit" class="btn btn-info">Registreer</button>
+    </form>
+</div>

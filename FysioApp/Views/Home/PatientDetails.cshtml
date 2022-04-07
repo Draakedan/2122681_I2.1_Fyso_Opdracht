@@ -1,0 +1,10 @@
+﻿@model DomainModels.Models.Patient
+@{
+    ViewData["Title"] = $"{Model.PatientNumber} info";
+}
+
+<h4>info van patient nr @Model.PatientNumber (@Model.Name)</h4>
+<p>Geboortedatum: @Model.Birthdate</p>
+<p>Leeftijd: @Model.Age</p>
+<p>stad: @Model.Adress.City</p>
+<p>Land: @Model.Adress.Country</p>

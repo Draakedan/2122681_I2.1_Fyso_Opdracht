@@ -1,0 +1,42 @@
+﻿@model NewSessionData
+@{
+    ViewData["Title"] = "Voeg behandeling toe";
+}
+
+<div class="container">
+    <h4>Nieuwe sessie door: @Model.Worker.Name</h4>
+    <form class="form-group" asp-action="NewSessionForFysio" method="post">
+        <input asp-for="Worker.FysioWorkerID" class="invisible" type="number" />
+        <input asp-for="IsFromList" class="invisible" type="number" />
+
+        <label asp-for="PatientID">Te behandelen Patient:</label>
+        <div><span asp-validation-for="PatientID" class="text-danger"></span></div>
+        <select class="form-control" asp-for="PatientID" asp-items="Model.PatientStrings">
+            <option value="">Seleceer patient</option>
+        </select>
+
+        <label asp-for="Session.Type">Type behandeling:</label>
+        <div><span asp-validation-for="Session.Type" class="text-danger"></span></div>
+        <select class="form-control" asp-for="Session.Type" asp-items="Model.BehandelingStrings">
+            <option value="">Kies Behandeling type...</option>
+        </select>
+
+        <label asp-for="Session.Specials">Als er toelichting verplicht is, voer toelichting in:</label>
+        <div><span asp-validation-for="Session.Specials" class="text-danger"></span></div>
+        <textarea asp-for="Session.Specials" class="form-control"></textarea>
+
+        <label asp-for="Session.Description">Beschrijving behandeling:</label>
+        <div><span asp-validation-for="Session.Description" class="text-danger"></span></div>
+        <textarea asp-for="Session.Description" class="form-control"></textarea>
+
+        <label asp-for="Session.IsPractiseRoom">Soort kamer</label>
+        <div><span asp-validation-for="Session.IsPractiseRoom" class="text-danger"></span></div>
+        @Html.RadioButtonFor(m => m.Session.IsPractiseRoom, true) Oefenzaal
+        @Html.RadioButtonFor(m => m.Session.IsPractiseRoom, false) Behandelruimte
+
+        <br /><br />
+
+        <button type="submit" class="btn btn-info">Selecteer tijd</button>
+
+    </form>
+</div>

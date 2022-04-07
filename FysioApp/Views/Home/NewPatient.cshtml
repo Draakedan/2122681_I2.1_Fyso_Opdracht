@@ -1,0 +1,54 @@
+﻿@model DomainModels.Models.Patient
+@{
+    ViewData["Title"] = "Voeg patient toe";
+}
+
+<div class="container">
+    <form class="form-group" asp-action="NewPatient" method="post">
+        <label asp-for="AdressID">Controleer address:</label>
+        <label>@Model.AdressID, @Model.Adress.Country @Model.Adress.City @Model.Adress.PostalCode @Model.Adress.Street @Model.Adress.HouseNumber</label>
+        <input asp-for="AdressID" class="invisible" type="number" />
+
+        <label asp-for="Name">Naam patient:</label>
+        <div><span asp-validation-for="Name" class="text-danger"></span></div>
+        <input asp-for="Name" class="form-control" type="text" />
+
+        <label asp-for="ImageUrl">Foto link:</label>
+        <input asp-for="ImageUrl" class="form-control" type="text" />
+
+        <label asp-for="EnsuranceCompany">Verzekering:</label>
+        <div><span asp-validation-for="EnsuranceCompany" class="text-danger"></span></div>
+        <input asp-for="EnsuranceCompany" class="form-control" type="text" />
+
+        <label asp-for="Email">Email Adress:</label>
+        <div><span asp-validation-for="Email" class="text-danger"></span></div>
+        <input asp-for="Email" class="form-control" type="email" />
+
+        <label asp-for="PhoneNumber">Telefoonnummer:</label>
+        <input asp-for="PhoneNumber" class="form-control" type="text" />
+
+        <label asp-for="IsMale">Geslacht:</label>
+        <div><span asp-validation-for="IsMale" class="text-danger"></span></div>
+        @Html.RadioButtonFor(m => m.IsMale, true) Man
+        @Html.RadioButtonFor(m => m.IsMale, false) Vrouw
+
+        <br />
+
+        <label asp-for="IsStudent">Is de patient een student of medewerker?</label>
+        <div><span asp-validation-for="IsStudent" class="text-danger"></span></div>
+        @Html.RadioButtonFor(m => m.IsStudent, true) Student
+        @Html.RadioButtonFor(m => m.IsStudent, false) Medewerker
+
+        <br />
+
+        <label asp-for="PatientNumber">AvansID in:</label>
+        <div><span asp-validation-for="PatientNumber" class="text-danger"></span></div>
+        <input asp-for="PatientNumber" class="form-control" type="text" />
+
+        <label asp-for="Birthdate">Geboortedatum patient:</label>
+        <div><span asp-validation-for="Birthdate" class="text-danger"></span></div>
+        <input asp-for="Birthdate" class="form-control" type="date" />
+
+        <button type="submit" class="btn btn-info">Toevoegen</button>
+    </form>
+</div>

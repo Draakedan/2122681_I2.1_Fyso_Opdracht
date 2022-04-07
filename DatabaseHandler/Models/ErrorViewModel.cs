@@ -1,6 +1,4 @@
-using System;
-
-namespace FysioApp.Models
+namespace DatabaseHandler.Models
 {
     public class ErrorViewModel
     {
