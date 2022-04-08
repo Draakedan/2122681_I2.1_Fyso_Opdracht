@@ -1312,7 +1312,7 @@ namespace FysioAppUX.Controllers
                 _patient.AddPatient(patient);
                 return View("Index");
             }
-            return View();
+            return View(patient);
         }
 
         private static int GetAge(DateTime birthdate) => new DateTime(DateTime.Now.Subtract(birthdate).Ticks).Year;

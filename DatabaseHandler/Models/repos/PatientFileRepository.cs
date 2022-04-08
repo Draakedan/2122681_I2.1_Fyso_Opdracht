@@ -107,7 +107,8 @@ namespace DatabaseHandler.Models
         public PatientFile GetPatientFileBySession(int id)
         {
             string[] sessionIds;
-            foreach (PatientFile file in Context.PatientFiles)
+            List<PatientFile> files = Context.PatientFiles.ToList();
+            foreach (PatientFile file in files)
             {
                 sessionIds = file.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 foreach (string s in sessionIds)
