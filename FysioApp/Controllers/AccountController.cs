@@ -205,8 +205,6 @@ namespace FysioAppUX.Controllers
                 ModelState.AddModelError("Password", "passwords don't match");
                 return View();
             }
-
-            return RedirectToAction("index", "home");
         }
     }
 }
