@@ -8,12 +8,19 @@
 
     @if (!Model.IsPatient)
     {
-    <a class="btn btn-info" href="@Url.Action("NewComment", "Home", new { id = Model.DossierID })">Maak nieuwe opmerking</a>
+        <a class="btn btn-info" href="@Url.Action("NewComment", "Home", new { id = Model.DossierID })">Maak nieuwe opmerking</a>
     }
     <div class="mt-2 mb-2">
         @foreach (Comment s in Model.Comments)
         {
-            <partial name="_CommentListPartial" model="s" />
+            @if (Model.IsPatient && s.VisibleToPatient)
+            {
+                <partial name="_CommentListPartial" model="s" />
+            }
+            @if (!Model.IsPatient)
+            {
+                <partial name="_CommentListPartial" model="s" />
+            }
         }
 
     </div>
