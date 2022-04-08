@@ -1296,12 +1296,15 @@ namespace FysioAppUX.Controllers
             else
                 patient.WorkerNumber = patient.PatientNumber;
             if (patient.Birthdate > DateTime.Now)
-                ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet later dan vandaag!");
-            patient.Age = GetAge(patient.Birthdate);
-            if (patient.Age < 16)
-                ModelState.AddModelError(nameof(patient.Birthdate), "Patient mag niet jonger dan 16 zijn!");
-            if (patient.Age > 100)
-                ModelState.AddModelError(nameof(patient.Birthdate), "Patient kan niet ouder zijn dan 100 jaar!");
+                ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet na dan vandaag!");
+            else
+            {
+                patient.Age = GetAge(patient.Birthdate);
+                if (patient.Age < 16)
+                    ModelState.AddModelError(nameof(patient.Birthdate), "Patient mag niet jonger dan 16 zijn!");
+                if (patient.Age > 100)
+                    ModelState.AddModelError(nameof(patient.Birthdate), "Patient kan niet ouder zijn dan 100 jaar!");
+            }
 
             if (patient.Email == null)
                 ModelState.AddModelError(nameof(patient.Email), "Email mag niet Leeg zijn!");
