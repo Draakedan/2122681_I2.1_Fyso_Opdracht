@@ -107,7 +107,8 @@ namespace DatabaseHandler.Models
         public PatientFile GetPatientFileBySession(int id)
         {
             string[] sessionIds;
-            foreach (PatientFile file in Context.PatientFiles)
+            List<PatientFile> files = Context.PatientFiles.ToList();
+            foreach (PatientFile file in files)
             {
                 sessionIds = file.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 foreach (string s in sessionIds)
@@ -121,16 +122,19 @@ namespace DatabaseHandler.Models
         {
             string sessionIDstring = "";
             PatientFile f = GetPatientFileBySession(session.Id);
-            f.Sessions.Remove(session);
-            string[] sessionIds = f.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in sessionIds)
-                if (int.Parse(s) != session.Id)
-                    sessionIDstring += $"{s} ";
-            f.SessionIDs = sessionIDstring;
-            Context.PatientFiles.Update(f);
-            if (!isInLoop)
+            if (f != null)
             {
-                Context.SaveChanges();
+                f.Sessions.Remove(session);
+                string[] sessionIds = f.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                foreach (string s in sessionIds)
+                    if (int.Parse(s) != session.Id)
+                        sessionIDstring += $"{s} ";
+                f.SessionIDs = sessionIDstring;
+                Context.PatientFiles.Update(f);
+                if (!isInLoop)
+                {
+                    Context.SaveChanges();
+                }
             }
         }
 
@@ -172,21 +176,6 @@ namespace DatabaseHandler.Models
 
         public void RemoveAllFiredPatientFiles()
         {
-            TherapySessionRepository session = new(Context);
-            CommentRepositroy comment = new(Context);
-            foreach (PatientFile patientFile in Context.PatientFiles)
-            {
-                if (patientFile.FireDate != new DateTime())
-                {
-                    if (patientFile.FireDate > DateTime.Now)
-                    {
-                        session.RemoveAllTherapySessionForFile(patientFile.ID);
-                        comment.RemoveAllCommentsForFile(patientFile.ID);
-                        Context.PatientFiles.Remove(patientFile);
-                    }
-                }
-            }
-            Context.SaveChanges();
         }
     }
 }
