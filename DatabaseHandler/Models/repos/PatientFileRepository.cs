@@ -179,7 +179,7 @@ namespace DatabaseHandler.Models
             {
                 if (patientFile.FireDate != new DateTime())
                 {
-                    if (patientFile.FireDate > DateTime.Now)
+                    if (patientFile.FireDate !> DateTime.Now)
                     {
                         session.RemoveAllTherapySessionForFile(patientFile.ID);
                         comment.RemoveAllCommentsForFile(patientFile.ID);

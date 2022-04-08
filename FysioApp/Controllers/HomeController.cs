@@ -1181,9 +1181,7 @@ namespace FysioAppUX.Controllers
             else
             {
                 DateTime time = new(int.Parse(timelist[0]), int.Parse(timelist[1]), int.Parse(timelist[2]));
-                if (time > DateTime.Now)
-                    ModelState.AddModelError("file.registerDate", "Datum van registratie mag niet in de toekomst zijn!");
-                else if (f.Patient != null)
+                if (f.Patient != null)
                     if (time < f.Patient.Birthdate)
                         ModelState.AddModelError("file.registerDate", "Datum van registratie mag niet voorafgaand aan geboorte zijn!");
                     else
