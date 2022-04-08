@@ -1254,7 +1254,7 @@ namespace FysioAppUX.Controllers
             if (ModelState.IsValid)
             {
                 _actionPlan.AddActionPlan(plan);
-                return View("Index");
+                return RedirectToAction("FysioHome");
             }
             return View(plan);
         }
@@ -1313,7 +1313,7 @@ namespace FysioAppUX.Controllers
             {
                 patient.Age = GetAge(patient.Birthdate);
                 _patient.AddPatient(patient);
-                return View("Index");
+                return RedirectToAction("FysioHome");
             }
             return View(patient);
         }
