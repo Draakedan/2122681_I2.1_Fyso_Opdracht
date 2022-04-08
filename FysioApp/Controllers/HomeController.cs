@@ -1078,7 +1078,7 @@ namespace FysioAppUX.Controllers
             return View(data);
         }
 
-        [Authorize(Roles = "PhysicalTherapist, Intern")]
+        [Authorize(Roles = "PhysicalTherapist")]
         [HttpGet]
         public IActionResult FysioHome()
         {
@@ -1181,7 +1181,9 @@ namespace FysioAppUX.Controllers
             else
             {
                 DateTime time = new(int.Parse(timelist[0]), int.Parse(timelist[1]), int.Parse(timelist[2]));
-                if (f.Patient != null)
+                if (time > DateTime.Now)
+                    ModelState.AddModelError("file.registerDate", "Datum van registratie mag niet in de toekomst zijn!");
+                else if (f.Patient != null)
                     if (time < f.Patient.Birthdate)
                         ModelState.AddModelError("file.registerDate", "Datum van registratie mag niet voorafgaand aan geboorte zijn!");
                     else
@@ -1252,7 +1254,7 @@ namespace FysioAppUX.Controllers
             if (ModelState.IsValid)
             {
                 _actionPlan.AddActionPlan(plan);
-                return RedirectToAction("FysioHome");
+                return View("Index");
             }
             return View(plan);
         }
@@ -1294,15 +1296,12 @@ namespace FysioAppUX.Controllers
             else
                 patient.WorkerNumber = patient.PatientNumber;
             if (patient.Birthdate > DateTime.Now)
-                ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet na dan vandaag!");
-            else
-            {
-                patient.Age = GetAge(patient.Birthdate);
-                if (patient.Age < 16)
-                    ModelState.AddModelError(nameof(patient.Birthdate), "Patient mag niet jonger dan 16 zijn!");
-                if (patient.Age > 100)
-                    ModelState.AddModelError(nameof(patient.Birthdate), "Patient kan niet ouder zijn dan 100 jaar!");
-            }
+                ModelState.AddModelError(nameof(patient.Birthdate), "Datum kan niet later dan vandaag!");
+            patient.Age = GetAge(patient.Birthdate);
+            if (patient.Age < 16)
+                ModelState.AddModelError(nameof(patient.Birthdate), "Patient mag niet jonger dan 16 zijn!");
+            if (patient.Age > 100)
+                ModelState.AddModelError(nameof(patient.Birthdate), "Patient kan niet ouder zijn dan 100 jaar!");
 
             if (patient.Email == null)
                 ModelState.AddModelError(nameof(patient.Email), "Email mag niet Leeg zijn!");
@@ -1311,9 +1310,9 @@ namespace FysioAppUX.Controllers
             {
                 patient.Age = GetAge(patient.Birthdate);
                 _patient.AddPatient(patient);
-                return RedirectToAction("FysioHome");
+                return View("Index");
             }
-            return View(patient);
+            return View();
         }
 
         private static int GetAge(DateTime birthdate) => new DateTime(DateTime.Now.Subtract(birthdate).Ticks).Year;

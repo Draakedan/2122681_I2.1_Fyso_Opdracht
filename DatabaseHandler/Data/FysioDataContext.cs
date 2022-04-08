@@ -19,22 +19,5 @@ namespace DatabaseHandler.Data
 
         public FysioDataContext(DbContextOptions<FysioDataContext> contextOptions) : base(contextOptions)
         { }
-
-        public FysioDataContext()
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            try
-            {
-                optionsBuilder.UseSqlServer("Server=2122681fysio-server2021.database.windows.net,1433; Database=FysioData;User ID=Draakedan2122681;Password=t&83N@gW0uO; MultipleActiveResultSets=True");
-            }
-            catch
-            {
-            }
-        }
-
-
     }
 }

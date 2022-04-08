@@ -177,6 +177,26 @@ namespace FysioAppUX.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string username, string email, string password, string comfirmPass)
         {
+            if (password.Any(ch => !Char.IsDigit(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a digit");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsNumber(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a number");
+                return View();
+            }
+            if (password.Any(ch => !Char.IsSymbol(ch)))
+            {
+                ModelState.AddModelError("Password", "passwords must contain a symbol");
+                return View();
+            }
+            if (password.Length >= 8)
+            {
+                ModelState.AddModelError("Password", "passwords must be at least 8 characters");
+                return View();
+            }
             if (password == comfirmPass)
             {
                 var user = new IdentityUser
@@ -194,17 +214,14 @@ namespace FysioAppUX.Controllers
                     var link = Url.Action(nameof(VerifyEmail), "Account", new { userId = user.Id, code });
                     return ComfirmAccount(link);
                 }
-                else 
-                {
-                    ModelState.AddModelError("Password", "passwords must is invalid");
-                    return View();
-                }
             }
             else
             {
                 ModelState.AddModelError("Password", "passwords don't match");
                 return View();
             }
+
+            return RedirectToAction("index", "home");
         }
     }
 }

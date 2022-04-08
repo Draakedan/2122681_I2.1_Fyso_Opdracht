@@ -10,7 +10,7 @@ namespace InfrastructureAPIHandler.Data
 {
     public class APIReader
     {
-        private static readonly string urlStart = "https://2122681fysioapi.azurewebsites.net/";
+        private static readonly string urlStart = "https://localhost:44307";
         private static readonly HttpClient client = new();
         public static async Task<List<Treatment>> ProcessAllBehandelingen()
         {
