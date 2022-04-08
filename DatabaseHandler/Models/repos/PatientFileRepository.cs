@@ -173,21 +173,6 @@ namespace DatabaseHandler.Models
 
         public void RemoveAllFiredPatientFiles()
         {
-            TherapySessionRepository session = new(Context);
-            CommentRepositroy comment = new(Context);
-            foreach (PatientFile patientFile in Context.PatientFiles)
-            {
-                if (patientFile.FireDate != new DateTime())
-                {
-                    if (patientFile.FireDate !> DateTime.Now)
-                    {
-                        session.RemoveAllTherapySessionForFile(patientFile.ID);
-                        comment.RemoveAllCommentsForFile(patientFile.ID);
-                        Context.PatientFiles.Remove(patientFile);
-                    }
-                }
-            }
-            Context.SaveChanges();
         }
     }
 }
