@@ -122,16 +122,19 @@ namespace DatabaseHandler.Models
         {
             string sessionIDstring = "";
             PatientFile f = GetPatientFileBySession(session.Id);
-            f.Sessions.Remove(session);
-            string[] sessionIds = f.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in sessionIds)
-                if (int.Parse(s) != session.Id)
-                    sessionIDstring += $"{s} ";
-            f.SessionIDs = sessionIDstring;
-            Context.PatientFiles.Update(f);
-            if (!isInLoop)
+            if (f != null)
             {
-                Context.SaveChanges();
+                f.Sessions.Remove(session);
+                string[] sessionIds = f.SessionIDs.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                foreach (string s in sessionIds)
+                    if (int.Parse(s) != session.Id)
+                        sessionIDstring += $"{s} ";
+                f.SessionIDs = sessionIDstring;
+                Context.PatientFiles.Update(f);
+                if (!isInLoop)
+                {
+                    Context.SaveChanges();
+                }
             }
         }
 
