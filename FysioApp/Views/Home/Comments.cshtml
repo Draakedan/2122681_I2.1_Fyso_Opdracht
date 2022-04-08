@@ -13,9 +13,12 @@
     <div class="mt-2 mb-2">
         @foreach (Comment s in Model.Comments)
         {
-            @if (Model.IsPatient && s.VisibleToPatient)
+            @if (Model.IsPatient)
             {
-                <partial name="_CommentListPartial" model="s" />
+                @if (s.VisibleToPatient)
+                {
+                    <partial name="_CommentListPartial" model="s" />
+                }
             }
             @if (!Model.IsPatient)
             {
